@@ -48,6 +48,12 @@ class NounsEng2Chn(object):
         self.mDataTradingDaysMap["nmc"] = "流通市值（万）"
 
         # get_hist_data()特定股票历史数据列
+        self.mDataSpecStockHistory["date"] = "日期"
+        self.mDataSpecStockHistory["open"] = "开盘价"
+        self.mDataSpecStockHistory["high"] = "最高价"
+        self.mDataSpecStockHistory["close"] = "收盘价"
+        self.mDataSpecStockHistory["low"] = "最低价"
+        self.mDataSpecStockHistory["volume"] = "成交量（手）"
         self.mDataSpecStockHistory["price_change"] = "价格变动"
         self.mDataSpecStockHistory["p_change"] = "涨跌幅（%）"
         self.mDataSpecStockHistory["ma5"] = "5日均价"

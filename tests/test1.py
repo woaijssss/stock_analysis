@@ -23,7 +23,7 @@ def getAllStockTradingDayData():
     获取指定股票历史数据
 '''
 def getSpecStockTest():
-    code = "000799"
+    code = "688981"
     df_SpecStockHistory = ts.get_hist_data(code, start='1970-01-01')
     df_SpecStockHistory = NounsEng2Chn().converseEng2Chn(df_SpecStockHistory, NounsEng2Chn.mDataSpecStockHistory)
     df_SpecStockHistory.to_excel("../datas/历史数据/" + code + "历史数据.xlsx", sheet_name='股票历史信息')
@@ -37,7 +37,7 @@ def getAllStockInfo():
     df_StockInfo.to_excel("../datas/股票数据/当前上市交易的股票列表.xlsx", sheet_name='股票列表')
 
 if __name__ == '__main__':
-    getAllStockTradingDayData()
+    # getAllStockTradingDayData()
     getSpecStockTest()
-    getAllStockInfo()
+    # getAllStockInfo()
     pass
