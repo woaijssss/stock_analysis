@@ -6,10 +6,11 @@ from pandas import DataFrame
 '''
 class NounsEng2Chn(object):
     __instance = None
-    mDataIndexInfo = {}             # 交易指数的基本数据           英文--中文对照关系
-    mDataTradingDaysMap = {}        # 记录A股当前交易日数据        英文--中文对照关系
-    mDataSpecStockHistory = {}      # 记录特定股票的历史性数据     英文--中文对照关系
-    mDataCompanyBasicInfo = {}      # 记录上市公司的基本情况       英文--中文对照关系
+    mDataAllIndexInfo = {}                  # 所有交易指数的基本数据       英文--中文对照关系
+    mDataSpecIndexInfo = {}                 # 特定交易指数的基本数据       英文--中文对照关系
+    mDataTradingDaysMap = {}                # 记录A股当前交易日数据        英文--中文对照关系
+    mDataSpecStockHistory = {}              # 记录特定股票的历史性数据     英文--中文对照关系
+    mDataCompanyBasicInfo = {}              # 记录上市公司的基本情况       英文--中文对照关系
 
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
@@ -17,17 +18,32 @@ class NounsEng2Chn(object):
         return cls.__instance
 
     def __init__(self):
-        # get_index（）交易指数基本信息列
-        self.mDataIndexInfo["code"] = "指数代码"
-        self.mDataIndexInfo["name"] = "指数名称"
-        self.mDataIndexInfo["change"] = "涨跌幅"
-        self.mDataIndexInfo["open"] = "开盘价"
-        self.mDataIndexInfo["preclose"] = "昨日收盘价"
-        self.mDataIndexInfo["close"] = "收盘价"
-        self.mDataIndexInfo["high"] = "最高价"
-        self.mDataIndexInfo["low"] = "最低价"
-        self.mDataIndexInfo["volume"] = "成交量(手)"
-        self.mDataIndexInfo["amount"] = "成交金额（亿元）"
+        # get_index（）所有交易指数基本信息列
+        self.mDataAllIndexInfo["code"] = "指数代码"
+        self.mDataAllIndexInfo["name"] = "指数名称"
+        self.mDataAllIndexInfo["change"] = "涨跌幅"
+        self.mDataAllIndexInfo["open"] = "开盘价"
+        self.mDataAllIndexInfo["preclose"] = "昨日收盘价"
+        self.mDataAllIndexInfo["close"] = "收盘价"
+        self.mDataAllIndexInfo["high"] = "最高价"
+        self.mDataAllIndexInfo["low"] = "最低价"
+        self.mDataAllIndexInfo["volume"] = "成交量(手)"
+        self.mDataAllIndexInfo["amount"] = "成交金额（亿元）"
+
+        # index_basic()特定交易指数基本信息列
+        self.mDataSpecIndexInfo["ts_code"] = "TS代码"
+        self.mDataSpecIndexInfo["name"] = "简称"
+        self.mDataSpecIndexInfo["fullname"] = "指数全称"
+        self.mDataSpecIndexInfo["market"] = "市场"
+        self.mDataSpecIndexInfo["publisher"] = "发布方"
+        self.mDataSpecIndexInfo["index_type"] = "指数风格"
+        self.mDataSpecIndexInfo["category"] = "指数类别"
+        self.mDataSpecIndexInfo["base_date"] = "基期"
+        self.mDataSpecIndexInfo["base_point"] = "基点"
+        self.mDataSpecIndexInfo["list_date"] = "发布日期"
+        self.mDataSpecIndexInfo["weight_rule"] = "加权方式"
+        self.mDataSpecIndexInfo["desc"] = "描述"
+        self.mDataSpecIndexInfo["exp_date"] = "终止日期"
 
         # get_today_all()股票实时数据列
         self.mDataTradingDaysMap["code"] = "代码"

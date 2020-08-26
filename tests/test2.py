@@ -13,7 +13,7 @@ pro = ts.pro_api(token='063c3e42ec30996bf395ddb0b7875918b2280544dee0c7e657b8136d
 '''
 def getAllIndexTest():
     df_IndexInfo = ts.get_index()
-    df_IndexInfo = NounsEng2Chn().converseEng2Chn(df_IndexInfo, NounsEng2Chn.mDataIndexInfo)
+    df_IndexInfo = NounsEng2Chn().converseEng2Chn(df_IndexInfo, NounsEng2Chn.mDataAllIndexInfo)
     df_IndexInfo.to_excel("../datas/指数数据/交易指数基本信息.xlsx", sheet_name='交易指数')
 
 '''
@@ -24,11 +24,11 @@ def getAllIndexTest():
         深交所指数：SZSE
 '''
 def getSpecIndexTest():
-
     df_IndexInfo = pro.index_basic(market='SW')
-    # df_IndexInfo = NounsEng2Chn().converseEng2Chn(df_IndexInfo, NounsEng2Chn.mDataIndexInfo)
+    df_IndexInfo = NounsEng2Chn().converseEng2Chn(df_IndexInfo, NounsEng2Chn.mDataSpecIndexInfo)
     df_IndexInfo.to_excel("../datas/指数数据/上证指数.xlsx", sheet_name='指数行情')
 
 if __name__ == '__main__':
     # getAllIndexTest()
-    getSpecIndexTest()
+    # getSpecIndexTest()
+    pass
