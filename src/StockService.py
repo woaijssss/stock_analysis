@@ -1,6 +1,7 @@
 
 import tushare as ts
 from stock_analysis.src.StockIndexDatasManager import StockIndexDatasManager
+from stock_analysis.src.StockDatasManager import StockDatasManager
 
 '''
     主服务入口
@@ -15,9 +16,35 @@ class StockService(object):
         return cls.__instance
 
     def __init__(self):
-        pro = ts.pro_api(token='063c3e42ec30996bf395ddb0b7875918b2280544dee0c7e657b8136d')
+        self.mPro = ts.pro_api(token='e5ccd9b1da858f2e127afef26431dd550ebd8d837f2394816722f0f9')
 
+    '''
+        开启主服务
+    '''
     def startService(self):
+        self.startDataCollection()
+
+    '''
+        开始获取基础数据
+    '''
+    def startDataCollection(self):
+        self.getStockIndexDatas()
+        self.getStockDatas()
+
+    '''
+        获取指数基础日K数据
+    '''
+    def getStockIndexDatas(self):
         mIndexDataManager = StockIndexDatasManager()
         mIndexDataManager.setPro(self.mPro)
-        mIndexDataManager.getAllIndexInfo()
+        mIndexDataManager.getAllIndexDaily()
+
+    '''
+        获取股票基础信息、日K数据
+    '''
+    def getStockDatas(self):
+        mStockDatasManager = StockDatasManager()
+        mStockDatasManager.setPro(self.mPro)
+        mStockDatasManager.getAllStockInfoPro()         # 从中获取A股代码
+        mStockDatasManager.getAllStockHistoryDatas()    # 获取所有A股的历史数据
+

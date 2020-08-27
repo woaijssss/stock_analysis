@@ -8,6 +8,9 @@ class NounsEng2Chn(object):
     __instance = None
     mDataAllIndexInfo = {}                  # 所有交易指数的基本数据       英文--中文对照关系
     mDataSpecIndexInfo = {}                 # 特定交易指数的基本数据       英文--中文对照关系
+    mDataSpecIndexTradingDaily = {}         # 特定交易指数的日K数据        英文--中文对照关系
+
+    mDataAllStockBasicInfo = {}             # 获取A股所有股票的基础信息    英文--中文对照关系
     mDataTradingDaysMap = {}                # 记录A股当前交易日数据        英文--中文对照关系
     mDataSpecStockHistory = {}              # 记录特定股票的历史性数据     英文--中文对照关系
     mDataCompanyBasicInfo = {}              # 记录上市公司的基本情况       英文--中文对照关系
@@ -44,6 +47,33 @@ class NounsEng2Chn(object):
         self.mDataSpecIndexInfo["weight_rule"] = "加权方式"
         self.mDataSpecIndexInfo["desc"] = "描述"
         self.mDataSpecIndexInfo["exp_date"] = "终止日期"
+
+        # index_daily()特定交易指数日K数据列
+        self.mDataSpecIndexTradingDaily["ts_code"] = "TS指数代码"
+        self.mDataSpecIndexTradingDaily["trade_date"] = "交易日"
+        self.mDataSpecIndexTradingDaily["close"] = "收盘点位"
+        self.mDataSpecIndexTradingDaily["open"] = "开盘点位"
+        self.mDataSpecIndexTradingDaily["high"] = "最高点位"
+        self.mDataSpecIndexTradingDaily["low"] = "最低点位"
+        self.mDataSpecIndexTradingDaily["pre_close"] = "昨日收盘点"
+        self.mDataSpecIndexTradingDaily["change"] = "涨跌点"
+        self.mDataSpecIndexTradingDaily["pct_chg"] = "涨跌幅（%）"
+        self.mDataSpecIndexTradingDaily["vol"] = "成交量（手）"
+        self.mDataSpecIndexTradingDaily["amount"] = "成交额（千元）"
+
+        # stock_basic()所有A股的基础信息列
+        self.mDataAllStockBasicInfo["ts_code"] = "TS代码"
+        self.mDataAllStockBasicInfo["symbol"] = "股票代码"
+        self.mDataAllStockBasicInfo["name"] = "股票名称"
+        self.mDataAllStockBasicInfo["area"] = "所在地域"
+        self.mDataAllStockBasicInfo["industry"] = "所属行业"
+        self.mDataAllStockBasicInfo["fullname"] = "股票全称"
+        self.mDataAllStockBasicInfo["enname"] = "英文全称"
+        self.mDataAllStockBasicInfo["market"] = "市场类型（主板/中小板/创业板/科创板）"
+        self.mDataAllStockBasicInfo["exchange"] = "交易所代码"
+        self.mDataAllStockBasicInfo["curr_type"] = "交易货币"
+        self.mDataAllStockBasicInfo["list_status"] = "上市状态"
+        self.mDataAllStockBasicInfo["list_date"] = "上市日期"
 
         # get_today_all()股票实时数据列
         self.mDataTradingDaysMap["code"] = "代码"
