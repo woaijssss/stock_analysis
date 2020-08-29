@@ -1,6 +1,7 @@
 
 import tushare as ts
 from stock_analysis.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+from stock_analysis.auxiliary_lib.ConfigLoader import ConfigLoader
 import stock_analysis.auxiliary_lib.util as util
 
 class StockDatasManager:
@@ -32,6 +33,7 @@ class StockDatasManager:
         df_StockInfo = self.__pro.stock_basic()
         df_StockInfo = df_StockInfo.reset_index()
         df_StockInfo = NounsEng2Chn().converseEng2Chn(df_StockInfo, NounsEng2Chn.mDataAllStockBasicInfo)
+        NounsEng2Chn().converseStockCode2Chn(df_StockInfo)
         df_StockInfo.to_excel("../datas/A_当前上市交易的股票列表.xlsx", sheet_name='股票列表', index=False)
         # __stock_code_list = list(df_StockInfo["code"])
         for i in range(0, len(df_StockInfo)):
@@ -45,11 +47,17 @@ class StockDatasManager:
             从 20200101 开始
     '''
     def getAllStockHistoryDatas(self):
+        count = 0
         for code in self.__stock_code_list:
+            count += 1
+            if code not in ConfigLoader().get("stocks", "code_list").split(","):
+                continue
+            print("第 %d 支股票，共 %d 支" % (count, len(self.__stock_code_list)))
             df_SpecStockHistory = ts.get_hist_data(code, start='2020-01-01')
             if df_SpecStockHistory is None:
                 print("None: ", code)
                 continue
             df_SpecStockHistory = df_SpecStockHistory.reset_index()
             df_SpecStockHistory = NounsEng2Chn().converseEng2Chn(df_SpecStockHistory, NounsEng2Chn.mDataSpecStockHistory)
-            df_SpecStockHistory.to_excel("../datas/股票数据/" + code + "历史数据.xlsx", sheet_name='历史日K数据', index=False)
+            filename = code + NounsEng2Chn().mStockCode2Chn.get(code) + ".xlsx"
+            df_SpecStockHistory.to_excel("../datas/股票数据/" + filename, sheet_name='历史日K数据', index=False)

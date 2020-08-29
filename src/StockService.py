@@ -28,8 +28,8 @@ class StockService(object):
         开始获取基础数据
     '''
     def startDataCollection(self):
-        self.getStockIndexDatas()
-        self.getStockDatas()
+        self.getStockIndexDatas()       # 获取指数数据
+        self.getStockDatas()            # 获取股票数据
 
     '''
         获取指数基础日K数据

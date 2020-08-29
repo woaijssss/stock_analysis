@@ -6,6 +6,7 @@ from pandas import DataFrame
 '''
 class NounsEng2Chn(object):
     __instance = None
+    mStockCode2Chn = {}                     # 股票代码--中文对照关系
     mDataAllIndexInfo = {}                  # 所有交易指数的基本数据       英文--中文对照关系
     mDataSpecIndexInfo = {}                 # 特定交易指数的基本数据       英文--中文对照关系
     mDataSpecIndexTradingDaily = {}         # 特定交易指数的日K数据        英文--中文对照关系
@@ -19,6 +20,23 @@ class NounsEng2Chn(object):
         if not cls.__instance:
             cls.__instance = super().__new__(cls, *args, **kwargs)
         return cls.__instance
+
+    '''
+        列名英文转中文
+    '''
+    def converseEng2Chn(self, df:DataFrame, name_dic:dict):
+        for name in list(df.columns):
+            if name in name_dic:
+                df.rename(columns={name: name_dic[name]}, inplace=True)  # 修改列名
+        return df
+
+    '''
+        股票代码转中文名字
+    '''
+    def converseStockCode2Chn(self, df:DataFrame):
+        for i in range(0, len(df)):
+            _, _, code, name, _, _, _, _ = df.iloc[i]
+            self.mStockCode2Chn[code] = name
 
     def __init__(self):
         # get_index（）所有交易指数基本信息列
@@ -133,10 +151,4 @@ class NounsEng2Chn(object):
         self.mDataCompanyBasicInfo["profit"] = "毛利率(%)"
         self.mDataCompanyBasicInfo["npr"] = "净利润率(%)"
         self.mDataCompanyBasicInfo["holders"] = "股东人数"
-
-    def converseEng2Chn(self, df:DataFrame, name_dic:dict):
-        for name in list(df.columns):
-            if name in name_dic:
-                df.rename(columns={name: name_dic[name]}, inplace=True)  # 修改列名
-        return df
 
