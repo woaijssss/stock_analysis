@@ -6,7 +6,7 @@ import mplfinance as mpf
     https://blog.csdn.net/wuwei_201/article/details/105781844
 '''
 
-df = pd.read_excel('../datas/历史数据/688981历史数据.xlsx', sheet_name='Sheet1', index_col=0, parse_dates=True)
+df = pd.read_excel('../datas/股票数据/603703盛洋科技.xlsx', sheet_name='历史日K数据', index_col=0, parse_dates=True)
 df.index.name = 'Date'
 
 # my_color = mpf.make_marketcolors(up='cyan', down='red', edge='black', wick='black', volume='blue')

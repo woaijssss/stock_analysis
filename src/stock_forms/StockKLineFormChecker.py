@@ -1,4 +1,6 @@
 
+from pandas import DataFrame
+
 '''
     - 单例模式
     - 股票形态检测器
@@ -24,3 +26,37 @@ class StockKLineFormChecker(object):
             cls.__instance = super().__new__(cls, *args, **kwargs)
         return cls.__instance
 
+    # 锤子线
+    def hammerWire(self, df:DataFrame):
+        resList = []
+        for i in range(0, len(df)):
+            line_lst = list(df.iloc[i])
+            open, high, close, low = line_lst[1:5]
+            entity_len = abs(open-close)    # K线实体
+            upper_shadow_len = high-open if open > close else high-close
+            # 长下影线 and 无上影线或极短的下影线
+            if (abs(low-open) > 2*entity_len or abs(low-close) > 2*entity_len) \
+                    and upper_shadow_len < 0.05:
+                resList.append(line_lst[0])
+        return resList
+
+    # 吞没形态
+    def engulfingForm(self, df:DataFrame):
+        resList = []
+        for i in range(0, len(df)-1):
+            lst1 = list(df.iloc[i+1])
+            lst2 = list(df.iloc[i])
+            open1, high1, close1, low1 = lst1[1:5]
+            open2, high2, close2, low2 = lst2[1:5]
+            # 看跌 or 看涨
+            if (open1<close1 and open2>close2 and open2>close1) or (open1>close1 and open2<close2 and close2>open1):
+                if abs(open1-close1) < abs(open2-close2):
+                    resList.append(lst1[0])
+        return resList
+
+if __name__ == '__main__':
+    import pandas as pd
+    df = pd.read_excel('../../datas/股票数据/603703盛洋科技.xlsx', sheet_name='历史日K数据', parse_dates=True)
+    # resList = StockKLineFormChecker().hammerWire(df)
+    resList = StockKLineFormChecker().engulfingForm(df)
+    print(resList)
