@@ -1,5 +1,5 @@
 
-from stock_analysis.src.StockService import StockService
+from stock_analysis.technology.src.StockService import StockService
 import os
 from pathlib import Path
 

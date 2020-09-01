@@ -1,8 +1,8 @@
 
 import tushare as ts
-from stock_analysis.src.StockIndexDatasManager import StockIndexDatasManager
-from stock_analysis.src.StockDatasManager import StockDatasManager
-from stock_analysis.src.analysis_department.StockAnalyst import StockAnalyst
+from stock_analysis.technology.src.StockIndexDatasManager import StockIndexDatasManager
+from stock_analysis.technology.src.StockDatasManager import StockDatasManager
+from stock_analysis.technology.src.analysis_department.StockAnalyst import StockAnalyst
 
 '''
     主服务入口

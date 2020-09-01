@@ -1,8 +1,8 @@
 
 import tushare as ts
-from stock_analysis.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
-from stock_analysis.auxiliary_lib.ConfigLoader import ConfigLoader
-import stock_analysis.auxiliary_lib.util as util
+from stock_analysis.technology.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+from stock_analysis.technology.auxiliary_lib.ConfigLoader import ConfigLoader
+import stock_analysis.technology.auxiliary_lib.util as util
 
 class StockDatasManager:
     __pro = None
