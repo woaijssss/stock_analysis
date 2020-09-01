@@ -1,6 +1,11 @@
 # stock_analysis
 python 股票分析工具
 
+# 基本面和技术面分析
+## 基本面分析(basic)
+
+## 技术面分析(technology)
+
 # 使用库
 ## tushare
 - [tushare github](https://github.com/waditu/tushare)
