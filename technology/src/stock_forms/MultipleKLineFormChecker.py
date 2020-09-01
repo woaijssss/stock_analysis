@@ -76,6 +76,24 @@ class MultipleKLineFormChecker(object):
         condition2 = open1 > close1 and open2 < close2 and open3 < close3 \
                      and open2 < close1 and open2 < open3 and close2 < open1 and close2 < close3 \
                      and open1 >= close3 and (close3 > close1 and close3 < open1)
-        if (condition1 or condition2) and abs(open2-close2)/open2 < 0.01:
+        if (condition1 or condition2) and abs(open2-close2)/open2 < 0.01:   # TODO 0.01精度需要测试调整
+            return True
+        return False
+
+    # 十字黄昏星
+    def crossEveningStarForm(self, dayOne:list, dayTwo:list, dayThreee:list):
+        open1, high1, close1, low1 = dayOne[1:5]
+        open2, high2, close2, low2 = dayTwo[1:5]
+        open3, high3, close3, low3 = dayThreee[1:5]
+
+        '''
+            - 第二天出现十字星线
+        '''
+        # 看跌
+        condition1 = open1 < close1 and open2 > close2 and open3 > close3 \
+                     and open2 > close1 and open2 > open3 and close2 > open1 and close2 > close3 \
+                    and (open3 > open1 and open3 < close1) \
+                    and abs(open3-close3) > abs(open2-close2)
+        if condition1 and abs(open2-close2)/open2 < 0.01:
             return True
         return False

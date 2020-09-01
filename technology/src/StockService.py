@@ -3,6 +3,7 @@ import tushare as ts
 from src.StockIndexDatasManager import StockIndexDatasManager
 from src.StockDatasManager import StockDatasManager
 from src.analysis_department.StockAnalyst import StockAnalyst
+from auxiliary_lib.ConfigLoader import ConfigLoader
 
 '''
     主服务入口
@@ -23,8 +24,15 @@ class StockService(object):
         开启主服务
     '''
     def startService(self):
-        self.startDataCollection()
-        self.startDataAnalysis()
+        if ConfigLoader().get("stocks", "use_analysis_engine") == '0':      # 仅获取数据
+            self.startDataCollection()
+        elif ConfigLoader().get("stocks", "use_analysis_engine") == '1':    # 获取数据，并进行技术分析
+            self.startDataCollection()
+            self.startDataAnalysis()
+        elif ConfigLoader().get("stocks", "use_analysis_engine") == '2':    # 仅进行技术分析
+            self.startDataAnalysis()
+        else:
+            print('错误的分析标识：[use_analysis_engine]')
 
     '''
         开始获取基础数据
@@ -56,4 +64,5 @@ class StockService(object):
             - ML预测
     '''
     def startDataAnalysis(self):
+        StockAnalyst().startAnalysis()
         pass

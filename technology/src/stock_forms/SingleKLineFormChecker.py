@@ -23,6 +23,6 @@ class SingleKLineFormChecker(object):
             - 无上影线或极短的下影线
         '''
         if (abs(low - open) > 2 * entity_len or abs(low - close) > 2 * entity_len) \
-                and upper_shadow_len < 0.05:
+                and upper_shadow_len < 0.01:
             return True
         return False

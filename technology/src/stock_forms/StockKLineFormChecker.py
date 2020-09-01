@@ -40,13 +40,18 @@ class StockKLineFormChecker(object):
     '''
     def checkDoubleKLineForm(self, dayOne:list, dayTwo:list):
         # TODO 增加同时检测多种形态
-        return DoubleKLineFormChecker().piercingForm(dayOne, dayTwo)
+        return (DoubleKLineFormChecker().engulfingForm(dayOne, dayTwo)
+                or DoubleKLineFormChecker().darkCloudCover(dayOne, dayTwo)
+                or DoubleKLineFormChecker().piercingForm(dayOne, dayTwo))
 
     '''
         多K线形态检测
     '''
     def checkMultipleKLineForm(self, dayOne:list, dayTwo:list, dayThree:list):
-        return MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree)
+        return (MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree)
+                or MultipleKLineFormChecker().eveningStarForm(dayOne, dayTwo, dayThree)
+                or MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree)
+                or MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree))
 
 
 

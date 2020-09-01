@@ -24,4 +24,5 @@ class ConfigLoader(object):
             return None
 
 if __name__ == '__main__':
-    print(ConfigLoader().get("aaa", "bbb"))
+    print(ConfigLoader().get("stocks", "use_analysis_engine"))
+    print(type(ConfigLoader().get("stocks", "use_analysis_engine")))
