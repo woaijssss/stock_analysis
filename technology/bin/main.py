@@ -1,6 +1,9 @@
 
-from stock_analysis.technology.src.StockService import StockService
 import os
+import sys
+sys.path.append(os.path.abspath('..'))
+
+from src.StockService import StockService
 from pathlib import Path
 
 if __name__ == '__main__':

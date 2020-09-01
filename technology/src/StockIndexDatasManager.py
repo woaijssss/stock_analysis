@@ -1,8 +1,8 @@
 
 import tushare as ts
 import pandas as pd
-from stock_analysis.technology.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
-import stock_analysis.technology.auxiliary_lib.util as util
+from auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+import auxiliary_lib.util as util
 
 '''
     获取所有的指数信息

@@ -1,8 +1,8 @@
 
 from pandas import DataFrame
-from stock_analysis.technology.src.stock_forms.SingleKLineFormChecker import SingleKLineFormChecker
-from stock_analysis.technology.src.stock_forms.DoubleKLineFormChecker import DoubleKLineFormChecker
-from stock_analysis.technology.src.stock_forms.MultipleKLineFormChecker import MultipleKLineFormChecker
+from src.stock_forms.SingleKLineFormChecker import SingleKLineFormChecker
+from src.stock_forms.DoubleKLineFormChecker import DoubleKLineFormChecker
+from src.stock_forms.MultipleKLineFormChecker import MultipleKLineFormChecker
 
 '''
     - 单例模式
