@@ -1,5 +1,8 @@
 
 from pandas import DataFrame
+from stock_analysis.src.stock_forms.SingleKLineFormChecker import SingleKLineFormChecker
+from stock_analysis.src.stock_forms.DoubleKLineFormChecker import DoubleKLineFormChecker
+from stock_analysis.src.stock_forms.MultipleKLineFormChecker import MultipleKLineFormChecker
 
 '''
     - 单例模式
@@ -26,37 +29,74 @@ class StockKLineFormChecker(object):
             cls.__instance = super().__new__(cls, *args, **kwargs)
         return cls.__instance
 
-    # 锤子线
-    def hammerWire(self, df:DataFrame):
-        resList = []
-        for i in range(0, len(df)):
-            line_lst = list(df.iloc[i])
-            open, high, close, low = line_lst[1:5]
-            entity_len = abs(open-close)    # K线实体
-            upper_shadow_len = high-open if open > close else high-close
-            # 长下影线 and 无上影线或极短的下影线
-            if (abs(low-open) > 2*entity_len or abs(low-close) > 2*entity_len) \
-                    and upper_shadow_len < 0.05:
-                resList.append(line_lst[0])
-        return resList
+    '''
+        单K线形态检测
+    '''
+    def checkSingleKLineForm(self, day:list):
+        return SingleKLineFormChecker().hammerWire(day)
 
-    # 吞没形态
-    def engulfingForm(self, df:DataFrame):
-        resList = []
-        for i in range(0, len(df)-1):
-            lst1 = list(df.iloc[i+1])
-            lst2 = list(df.iloc[i])
-            open1, high1, close1, low1 = lst1[1:5]
-            open2, high2, close2, low2 = lst2[1:5]
-            # 看跌 or 看涨
-            if (open1<close1 and open2>close2 and open2>close1) or (open1>close1 and open2<close2 and close2>open1):
-                if abs(open1-close1) < abs(open2-close2):
-                    resList.append(lst1[0])
-        return resList
+    '''
+        双K线形态检测
+    '''
+    def checkDoubleKLineForm(self, dayOne:list, dayTwo:list):
+        # TODO 增加同时检测多种形态
+        return DoubleKLineFormChecker().piercingForm(dayOne, dayTwo)
+
+    '''
+        多K线形态检测
+    '''
+    def checkMultipleKLineForm(self, dayOne:list, dayTwo:list, dayThree:list):
+        return MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree)
+
+
+
+########################################################################################################################
+def testOneDay(df:DataFrame):
+    resList = []
+    for i in range(0, len(df)):
+            line_lst = list(df.iloc[i])
+            date, open, high, close, low = line_lst[0:5]
+            day = [open, high, close, low]
+            if StockKLineFormChecker().checkSingleKLineForm(day):
+                resList.append(date)
+    print("一天的指标： ", resList)
+
+def testTwoDay(df:DataFrame):
+    resList = []
+    for i in range(0, len(df) - 1):
+        dayOne = list(df.iloc[i + 1])
+        dayTwo = list(df.iloc[i])
+        if StockKLineFormChecker().checkDoubleKLineForm(dayOne, dayTwo):
+            resList.append(dayOne[0])
+    print("两天的指标： ", resList)
+
+def testThreeDay(df: DataFrame):
+    resList = []
+    for i in range(0, len(df) - 2):
+        dayOne = list(df.iloc[i + 2])
+        dayTwo = list(df.iloc[i + 1])
+        dayThree = list(df.iloc[i])
+        if StockKLineFormChecker().checkMultipleKLineForm(dayOne, dayTwo, dayThree):
+            resList.append(dayTwo[0])
+    print("三天的指标： ", resList)
 
 if __name__ == '__main__':
     import pandas as pd
-    df = pd.read_excel('../../datas/股票数据/603703盛洋科技.xlsx', sheet_name='历史日K数据', parse_dates=True)
-    # resList = StockKLineFormChecker().hammerWire(df)
-    resList = StockKLineFormChecker().engulfingForm(df)
-    print(resList)
+    stockMap = {
+        "000524": "岭南控股",
+        "002108": "沧州明珠",
+        "002138": "顺络电子",
+        "002407": "多氟多",
+        "002625": "光启技术",
+        "600776": "东方通信",
+        "603703": "盛洋科技",
+        "603869": "新智认知"
+    }
+
+    for id in stockMap.keys():
+        df = pd.read_excel('../../datas/股票数据/' + id + stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
+        print('-----------------------------: ' + id + stockMap[id])
+        testOneDay(df)
+        testTwoDay(df)
+        testThreeDay(df)
+        print('===========================================\n')
