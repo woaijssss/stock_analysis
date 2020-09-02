@@ -64,5 +64,7 @@ class StockService(object):
             - ML预测
     '''
     def startDataAnalysis(self):
-        StockAnalyst().startAnalysis()
+        df = StockAnalyst().startAnalysis()
+        # print(df.head(5))
+        df.to_excel("../datas/执行结果.xlsx", sheet_name='执行结果', index=False)
         pass

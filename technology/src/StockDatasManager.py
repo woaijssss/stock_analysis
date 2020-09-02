@@ -53,7 +53,8 @@ class StockDatasManager:
             if code not in ConfigLoader().get("stocks", "code_list").split(","):
                 continue
             print("第 %d 支股票，共 %d 支" % (count, len(self.__stock_code_list)))
-            df_SpecStockHistory = ts.get_hist_data(code, start='2020-01-01')
+            startDate = ConfigLoader().get("stocks", "history_data_start_date")
+            df_SpecStockHistory = ts.get_hist_data(code, start=startDate)
             if df_SpecStockHistory is None:
                 print("None: ", code)
                 continue

@@ -32,58 +32,70 @@ class StockKLineFormChecker(object):
     '''
         单K线形态检测
     '''
-    def checkSingleKLineForm(self, day:list):
-        return SingleKLineFormChecker().hammerWire(day)
+    def checkSingleKLineForm(self, date:str, day:list):
+        resStr = ""
+        if SingleKLineFormChecker().hammerWire(day):
+            resStr += date + " 锤子线\n"
+        return resStr
 
     '''
         双K线形态检测
     '''
-    def checkDoubleKLineForm(self, dayOne:list, dayTwo:list):
-        # TODO 增加同时检测多种形态
-        return (DoubleKLineFormChecker().engulfingForm(dayOne, dayTwo)
-                or DoubleKLineFormChecker().darkCloudCover(dayOne, dayTwo)
-                or DoubleKLineFormChecker().piercingForm(dayOne, dayTwo))
+    def checkDoubleKLineForm(self, date:str, dayOne: list, dayTwo: list):
+        resStr = ""
+        if DoubleKLineFormChecker().engulfingForm(dayOne, dayTwo):
+            resStr += date + "吞没形态\n"
+        if DoubleKLineFormChecker().darkCloudCover(dayOne, dayTwo):
+            resStr += date + "乌云盖顶\n"
+        if DoubleKLineFormChecker().piercingForm(dayOne, dayTwo):
+            resStr += date + "刺透形态\n"
+        return resStr
 
     '''
         多K线形态检测
     '''
-    def checkMultipleKLineForm(self, dayOne:list, dayTwo:list, dayThree:list):
-        return (MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree)
-                or MultipleKLineFormChecker().eveningStarForm(dayOne, dayTwo, dayThree)
-                or MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree)
-                or MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree))
-
-
+    def checkMultipleKLineForm(self, date:str, dayOne:list, dayTwo:list, dayThree:list):
+        resStr = ""
+        if MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree):
+            resStr = date + "启明星形态\n"
+        if MultipleKLineFormChecker().eveningStarForm(dayOne, dayTwo, dayThree):
+            resStr = date + "黄昏星形态\n"
+        if MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree):
+            resStr = date + "十字启明星形态\n"
+        if  MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree):
+            resStr = date + "十字黄昏星\n"
+        return resStr
 
 ########################################################################################################################
-def testOneDay(df:DataFrame):
-    resList = []
-    for i in range(0, len(df)):
-            line_lst = list(df.iloc[i])
-            date, open, high, close, low = line_lst[0:5]
-            day = [open, high, close, low]
-            if StockKLineFormChecker().checkSingleKLineForm(day):
-                resList.append(date)
-    print("一天的指标： ", resList)
 
-def testTwoDay(df:DataFrame):
-    resList = []
-    for i in range(0, len(df) - 1):
+def oneDayAnalysisIndicators(df: DataFrame):
+    resResult = ""
+    for i in range(0, len(df)):
+        line_lst = list(df.iloc[i])
+        date, open, high, close, low = line_lst[0:5]
+        day = [open, high, close, low]
+        resResult += StockKLineFormChecker().checkSingleKLineForm(date, day)
+    return resResult
+
+def twoDayAnalysisIndicators(df: DataFrame):
+    resResult = ""
+    for i in range(0, len(df)-1):
         dayOne = list(df.iloc[i + 1])
         dayTwo = list(df.iloc[i])
-        if StockKLineFormChecker().checkDoubleKLineForm(dayOne, dayTwo):
-            resList.append(dayOne[0])
-    print("两天的指标： ", resList)
+        date = dayOne[0]
+        resResult += StockKLineFormChecker().checkDoubleKLineForm(date, dayOne, dayTwo)
+    return resResult
 
-def testThreeDay(df: DataFrame):
-    resList = []
-    for i in range(0, len(df) - 2):
+
+def threeDayAnalysisIndicators(df: DataFrame):
+    resResult = ""
+    for i in range(0, len(df)-2):
         dayOne = list(df.iloc[i + 2])
         dayTwo = list(df.iloc[i + 1])
         dayThree = list(df.iloc[i])
-        if StockKLineFormChecker().checkMultipleKLineForm(dayOne, dayTwo, dayThree):
-            resList.append(dayTwo[0])
-    print("三天的指标： ", resList)
+        date = dayTwo[0]
+        resResult += StockKLineFormChecker().checkMultipleKLineForm(date, dayOne, dayTwo, dayThree)
+    return resResult
 
 if __name__ == '__main__':
     import pandas as pd
@@ -95,13 +107,17 @@ if __name__ == '__main__':
         "002625": "光启技术",
         "600776": "东方通信",
         "603703": "盛洋科技",
-        "603869": "新智认知"
+        "603869": "新智认知",
+        "600988": "赤峰黄金"
     }
 
     for id in stockMap.keys():
         df = pd.read_excel('../../datas/股票数据/' + id + stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
         print('-----------------------------: ' + id + stockMap[id])
-        testOneDay(df)
-        testTwoDay(df)
-        testThreeDay(df)
+        oneDay_res = oneDayAnalysisIndicators(df)
+        twoDay_res = twoDayAnalysisIndicators(df)
+        threeDay_res = threeDayAnalysisIndicators(df)
+        print("一天: " + oneDay_res)
+        print("二天: " + twoDay_res)
+        print("三天: " + threeDay_res)
         print('===========================================\n')

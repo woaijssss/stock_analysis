@@ -59,10 +59,10 @@ class MultipleKLineFormChecker(object):
         return False
 
     # 十字启明星形态
-    def crossVenusForm(self, dayOne:list, dayTwo:list, dayThreee:list):
+    def crossVenusForm(self, dayOne:list, dayTwo:list, dayThree:list):
         open1, high1, close1, low1 = dayOne[1:5]
         open2, high2, close2, low2 = dayTwo[1:5]
-        open3, high3, close3, low3 = dayThreee[1:5]
+        open3, high3, close3, low3 = dayThree[1:5]
 
         '''
             - 第二天出现十字星线
@@ -97,3 +97,31 @@ class MultipleKLineFormChecker(object):
         if condition1 and abs(open2-close2)/open2 < 0.01:
             return True
         return False
+
+
+if __name__ == '__main__':
+    import pandas as pd
+    stockMap = {
+        "000524": "岭南控股",
+        "002108": "沧州明珠",
+        "002138": "顺络电子",
+        "002407": "多氟多",
+        "002625": "光启技术",
+        "600776": "东方通信",
+        "603703": "盛洋科技",
+        "603869": "新智认知",
+        "600988": "赤峰黄金"
+    }
+
+    for id in stockMap.keys():
+        df = pd.read_excel('../../datas/股票数据/' + id + stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
+        print('-----------------------------: ' + id + stockMap[id])
+
+        for i in range(0, len(df) - 2):
+            dayOne = list(df.iloc[i + 2])
+            dayTwo = list(df.iloc[i + 1])
+            dayThree = list(df.iloc[i])
+            date = dayTwo[0]
+            if MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree):
+                print("一天: " + date)
+        print('===========================================\n')
