@@ -122,6 +122,6 @@ if __name__ == '__main__':
             dayTwo = list(df.iloc[i + 1])
             dayThree = list(df.iloc[i])
             date = dayTwo[0]
-            if MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree):
-                print("一天: " + date)
+            if MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree):
+                print("====: " + date)
         print('===========================================\n')

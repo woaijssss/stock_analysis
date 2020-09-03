@@ -1,5 +1,6 @@
 
 import tushare as ts
+import os
 from src.StockIndexDatasManager import StockIndexDatasManager
 from src.StockDatasManager import StockDatasManager
 from src.analysis_department.StockAnalyst import StockAnalyst
@@ -30,6 +31,14 @@ class StockService(object):
             self.startDataCollection()
             self.startDataAnalysis()
         elif ConfigLoader().get("stocks", "use_analysis_engine") == '2':    # 仅进行技术分析
+            # 提取带有历史数据文件的所有股票
+            files = os.listdir("../datas/股票数据")
+            for file in files:
+                file = file.split('.xlsx')[0]
+                code = file[0:6]
+                name = file[6::]
+                StockAnalyst().setCode2Name(code, name)
+
             self.startDataAnalysis()
         else:
             print('错误的分析标识：[use_analysis_engine]')

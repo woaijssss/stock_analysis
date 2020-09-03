@@ -53,3 +53,48 @@ class DoubleKLineFormChecker(object):
                 (low1 >= open2 or close1 >= open2) and close2 < open1 and close2 > (open1+close1)/2:
             return True
         return False
+
+    # 倒锤子形态
+    def InvertedHammerWire(self, dayOne:list, dayTwo:list):
+        open1, high1, close1, low1 = dayOne[1:5]
+        open2, high2, close2, low2 = dayTwo[1:5]
+        entity_len = abs(open1 - close1)  # K线实体
+        lower_shadow_len = open1 - low1 if open1 < close1 else close1 - low1
+        max1 = max(open1, close1)
+        '''
+            - 实体较小
+            - 长上影线
+            - 颜色不重要
+        '''
+        if abs(high1 - max1) > 2 * entity_len \
+                and lower_shadow_len < 0.05 \
+                and open2 < close2 and max1 < open2:
+            return True
+        return False
+
+if __name__ == '__main__':
+    import pandas as pd
+    stockMap = {
+        "000524": "岭南控股",
+        "002108": "沧州明珠",
+        "002138": "顺络电子",
+        "002407": "多氟多",
+        "002625": "光启技术",
+        "600776": "东方通信",
+        "603703": "盛洋科技",
+        "603869": "新智认知",
+        "600988": "赤峰黄金",
+        '002416': '爱施德'
+    }
+
+    for id in stockMap.keys():
+        df = pd.read_excel('../../datas/股票数据/' + id + stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
+        print('-----------------------------: ' + id + stockMap[id])
+
+        for i in range(0, len(df) - 1):
+            dayOne = list(df.iloc[i + 1])
+            dayTwo = list(df.iloc[i])
+            date = dayOne[0]
+            if DoubleKLineFormChecker().InvertedHammerWire(dayOne, dayTwo):
+                print("====: " + date)
+        print('===========================================\n')
