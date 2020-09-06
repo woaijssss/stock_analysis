@@ -4,7 +4,7 @@
 '''
 
 import tushare as ts
-from stock_analysis.auxiliary_lib.NounsEng2Chn import NounsEng2Chn
+from auxiliary_lib.NounsEng2Chn import NounsEng2Chn
 from pandas import DataFrame
 import pandas as pd
 
@@ -23,7 +23,7 @@ def getAllStockTradingDayData():
     获取指定股票历史数据
 '''
 def getSpecStockTest():
-    code = "000029"
+    code = "000001"
     df_SpecStockHistory = ts.get_hist_data(code, start='2020-01-01')
     df_SpecStockHistory = NounsEng2Chn().converseEng2Chn(df_SpecStockHistory, NounsEng2Chn.mDataSpecStockHistory)
     df_SpecStockHistory.to_excel("../datas/" + code + "历史数据.xlsx", sheet_name='股票历史信息')

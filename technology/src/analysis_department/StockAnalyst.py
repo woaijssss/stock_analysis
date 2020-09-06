@@ -73,17 +73,17 @@ class StockAnalyst(object):
     def setAnalysisDays(self, df: DataFrame):
         if self.__analysis_days == -1:
             self.__analysis_days = len(df)
-        else:
+        else:   # analysis_days配置不为 -1
             startDate = ConfigLoader().get("stocks", "history_data_start_date")
-            if startDate == '-1':
+            if startDate == '-1':   # 只计算7天的量
                 self.__analysis_days = 7 if len(df) >= 7 else len(df)
             else:
                 # 计算数据起始日期距离现在的天数
                 year, mon, day = startDate.split('-')
-                d1 = datetime.datetime(year, mon, day)
+                d1 = datetime.datetime(int(year), int(mon), int(day))
                 d2 = datetime.datetime.now()  # 第二个日期
-                self.__analysis_days = (d2-d1).days
-        # print('----: ', self.__analysis_days)
+                days = (d2-d1).days
+                self.__analysis_days = len(df) if days>len(df) else days
 
 
     ########################################################################################################################

@@ -4,7 +4,7 @@
 '''
 '''
     # 锤子线
-    # 十字星线
+    # 流星形态
 '''
 class SingleKLineFormChecker(object):
     __instance = None
@@ -24,8 +24,8 @@ class SingleKLineFormChecker(object):
         '''
         if (abs(low - open) > 2 * entity_len or abs(low - close) > 2 * entity_len) \
                 and upper_shadow_len < 0.01:
-            return True
-        return False
+            return 0x000
+        return -1
 
     # 流星形态
     ## 流星形态的高位看跌比低位看涨要强烈！！！
@@ -40,8 +40,8 @@ class SingleKLineFormChecker(object):
         '''
         if (abs(high - open) > 2 * entity_len or abs(high - close) > 2 * entity_len) \
                 and lower_shadow_len < 0.01:
-            return True
-        return False
+            return 0x001
+        return -1
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@ from pandas import DataFrame
 from src.stock_forms.SingleKLineFormChecker import SingleKLineFormChecker
 from src.stock_forms.DoubleKLineFormChecker import DoubleKLineFormChecker
 from src.stock_forms.MultipleKLineFormChecker import MultipleKLineFormChecker
+from src.analysis_department.StockForms import StockForms
 
 '''
     - 单例模式
@@ -34,8 +35,13 @@ class StockKLineFormChecker(object):
     '''
     def checkSingleKLineForm(self, date:str, day:list):
         resStr = ""
-        if SingleKLineFormChecker().hammerWire(day):
-            resStr += date + " 锤子线\n"
+        res = -1
+        res = SingleKLineFormChecker().hammerWire(day)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = SingleKLineFormChecker().meteorForm(day)
+        if res != -1:
+            resStr += date + StockForms().get(res)
         return resStr
 
     '''
@@ -43,12 +49,30 @@ class StockKLineFormChecker(object):
     '''
     def checkDoubleKLineForm(self, date:str, dayOne: list, dayTwo: list):
         resStr = ""
-        if DoubleKLineFormChecker().engulfingForm(dayOne, dayTwo):
-            resStr += date + "吞没形态\n"
-        if DoubleKLineFormChecker().darkCloudCover(dayOne, dayTwo):
-            resStr += date + "乌云盖顶\n"
-        if DoubleKLineFormChecker().piercingForm(dayOne, dayTwo):
-            resStr += date + "刺透形态\n"
+        res = DoubleKLineFormChecker().engulfingForm(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().darkCloudCover(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().piercingForm(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().InvertedHammerWire(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().pregnantLineForm(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().crossPregnantLineForm(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().flatTopForm(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = DoubleKLineFormChecker().flatBottomForm(dayOne, dayTwo)
+        if res != -1:
+            resStr += date + StockForms().get(res)
         return resStr
 
     '''
@@ -56,14 +80,21 @@ class StockKLineFormChecker(object):
     '''
     def checkMultipleKLineForm(self, date:str, dayOne:list, dayTwo:list, dayThree:list):
         resStr = ""
-        if MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree):
-            resStr = date + "启明星形态\n"
-        if MultipleKLineFormChecker().eveningStarForm(dayOne, dayTwo, dayThree):
-            resStr = date + "黄昏星形态\n"
-        if MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree):
-            resStr = date + "十字启明星形态\n"
-        if  MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree):
-            resStr = date + "十字黄昏星\n"
+        res = MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = MultipleKLineFormChecker().eveningStarForm(dayOne, dayTwo, dayThree)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree)
+        if res != -1:
+            resStr += date + StockForms().get(res)
+        res = MultipleKLineFormChecker().gapUpTwoCrows(dayOne, dayTwo, dayThree)
+        if res != -1:
+            resStr += date + StockForms().get(res)
         return resStr
 
 ########################################################################################################################
