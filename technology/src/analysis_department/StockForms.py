@@ -33,6 +33,8 @@ class StockForms(object):
         self.__stockForms[0x204] = "向上跳空两只乌鸦\r\n"
 
     def get(self, hexKey:int):
+        if not hexKey:
+            return ""
         if hexKey in self.__stockForms.keys():
             return self.__stockForms[hexKey]
         return ""

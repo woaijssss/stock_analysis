@@ -13,3 +13,10 @@ d2 = datetime.datetime.now()   # 第二个日期
 print(d2)
 interval = d2 - d1
 print(interval.days)
+
+list = [1, 2, 3, 4, 5]
+for i in range(0, len(list)):
+    ma = list[i:len(list)]
+    print(ma, "|", min(ma))
+
+print(list[::-1])

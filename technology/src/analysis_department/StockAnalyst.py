@@ -4,6 +4,8 @@ import datetime
 from pandas import DataFrame
 from src.stock_forms.StockKLineFormChecker import StockKLineFormChecker
 from auxiliary_lib.ConfigLoader import ConfigLoader
+from src.analysis_department.CurveDeterminer import CurveDeterminer
+from src.analysis_department.StockForms import StockForms
 
 '''
     股票数据分析器
@@ -36,37 +38,59 @@ class StockAnalyst(object):
             "600988": "赤峰黄金"
         }
 
-    def test(self):
-        print('+++: ', self.__stockMap)
-
+    '''
+        设置 股票代码——股票名称 对应关系
+    '''
     def setCode2Name(self, code:str, name:str):
         self.__stockMap[code] = name
 
+    '''
+        根据 股票代码 获取股票名称
+    '''
     def getNameByCode(self, code:str):
         return self.__stockMap[code]
 
-    def startAnalysis(self):
-        columns = ["股票代码", "股票名称", "一天形态", "两天形态", "多天形态", "操作决策"]
+    '''
+        K线形态分析
+    '''
+    def startAnalysisKLineForm(self):
+        columns = ["股票代码", "股票名称", "一天形态", "两天形态", "多天形态", "5日均线趋势", "操作决策"]
         df_result = DataFrame(columns=columns)
         for id in self.__stockMap.keys():
+            # 趋势线形态
+            curveShape = -1
             if not os.path.exists(self.__root_path + id + self.__stockMap[id] + '.xlsx'):
                 continue
             df = pd.read_excel(self.__root_path + id + self.__stockMap[id] + '.xlsx', sheet_name='历史日K数据',
                                parse_dates=True)
             print('-----------------------------: ' + id + self.__stockMap[id])
+
+            self.setAnalysisDays(df)
+            if ConfigLoader().get("stocks", "use_ma5") == '1':
+                # 倒序排列5日均价数据
+                ma5_list = list(df['5日均价'])[0:self.__analysis_days][::-1]
+                size = len(ma5_list)
+                curveShape = CurveDeterminer().curveUnevennessJudgment(ma5_list)
+
             oneDay_res = self.oneDayAnalysisIndicators(df)
             twoDay_res = self.twoDayAnalysisIndicators(df)
             threeDay_res = self.threeDayAnalysisIndicators(df)
-            # print("一天: " + oneDay_res)
-            # print("二天: " + twoDay_res)
-            # print("三天: " + threeDay_res)
 
-            result = ''
-            if oneDay_res or twoDay_res or threeDay_res:
-                result = '可操作'
+            form_condition = oneDay_res or twoDay_res or threeDay_res
+            if curveShape == -1:
+                if form_condition:
+                    result = "无趋势线，可操作"
+                else:
+                    result = "无趋势线，不可操作"
+            elif curveShape == 0 and form_condition:
+                result = "买入"
+            elif curveShape == 1 and form_condition:
+                result = "卖出"
             else:
-                result = '不可操作'
-            df_tmp = pd.DataFrame([[id, self.__stockMap[id], oneDay_res, twoDay_res, threeDay_res, result]], columns=columns)
+                result = "观望"
+
+            list2Df = [[id, self.__stockMap[id], oneDay_res, twoDay_res, threeDay_res, CurveDeterminer().getChnByTrendCode(curveShape), result]]
+            df_tmp = pd.DataFrame(list2Df, columns=columns)
             df_result = df_result.append(df_tmp)
         return df_result
 
@@ -90,6 +114,7 @@ class StockAnalyst(object):
 
 
     ########################################################################################################################
+    # 一日形态
     def oneDayAnalysisIndicators(self, df: DataFrame):
         self.setAnalysisDays(df)
 
@@ -101,10 +126,8 @@ class StockAnalyst(object):
             resResult += StockKLineFormChecker().checkSingleKLineForm(date, day)
         return resResult
 
-
+    # 两日组合形态
     def twoDayAnalysisIndicators(self, df: DataFrame):
-        self.setAnalysisDays(df)
-
         resResult = ""
         for i in range(0, self.__analysis_days-1):
             dayOne = list(df.iloc[i + 1])
@@ -113,10 +136,8 @@ class StockAnalyst(object):
             resResult += StockKLineFormChecker().checkDoubleKLineForm(date, dayOne, dayTwo)
         return resResult
 
-
+    # 多日组合形态
     def threeDayAnalysisIndicators(self, df: DataFrame):
-        self.setAnalysisDays(df)
-
         resResult = ""
         for i in range(0, self.__analysis_days-2):
             dayOne = list(df.iloc[i + 2])

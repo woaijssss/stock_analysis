@@ -32,6 +32,8 @@ class StockKLineFormChecker(object):
 
     '''
         单K线形态检测
+        :param date: 当前K线的日期
+        :param day: 当前K线的价格表 [开盘价，最高价，收盘价，最低价]
     '''
     def checkSingleKLineForm(self, date:str, day:list):
         resStr = ""

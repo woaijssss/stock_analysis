@@ -38,7 +38,6 @@ class StockService(object):
                 code = file[0:6]
                 name = file[6::]
                 StockAnalyst().setCode2Name(code, name)
-
             self.startDataAnalysis()
         else:
             print('错误的分析标识：[use_analysis_engine]')
@@ -73,7 +72,6 @@ class StockService(object):
             - ML预测
     '''
     def startDataAnalysis(self):
-        df = StockAnalyst().startAnalysis()
-        # print(df.head(5))
+        df = StockAnalyst().startAnalysisKLineForm()
         df.to_excel("../datas/执行结果.xlsx", sheet_name='执行结果', index=False)
         pass
