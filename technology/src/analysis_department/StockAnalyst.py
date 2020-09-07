@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import datetime
 from pandas import DataFrame
@@ -48,6 +49,8 @@ class StockAnalyst(object):
         columns = ["股票代码", "股票名称", "一天形态", "两天形态", "多天形态", "操作决策"]
         df_result = DataFrame(columns=columns)
         for id in self.__stockMap.keys():
+            if not os.path.exists(self.__root_path + id + self.__stockMap[id] + '.xlsx'):
+                continue
             df = pd.read_excel(self.__root_path + id + self.__stockMap[id] + '.xlsx', sheet_name='历史日K数据',
                                parse_dates=True)
             print('-----------------------------: ' + id + self.__stockMap[id])
