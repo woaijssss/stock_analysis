@@ -3,6 +3,9 @@ class StockForms(object):
     __instance = None
     __stockForms = None
 
+    __topFlipForms = []
+    __buttomFlipForms = []
+
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
             cls.__instance = super().__new__(cls, *args, **kwargs)
@@ -10,6 +13,9 @@ class StockForms(object):
         return cls.__instance
 
     def init(self):
+        self.__topFlipForms = [0x000, 0x001, 0x100, 0x101, 0x104, 0x105, 0x106, 0x201, 0x203, 0x204]
+        self.__buttomFlipForms = [0x000, 0x100, 0x102, 0x103, 0x107, 0x200, 0x202, 0x205]
+
         self.__stockForms = {}
         # 单K线形态
         self.__stockForms[0x000] = "锤子线\r\n"
@@ -31,13 +37,20 @@ class StockForms(object):
         self.__stockForms[0x202] = "十字启明星\r\n"
         self.__stockForms[0x203] = "十字黄昏星\r\n"
         self.__stockForms[0x204] = "向上跳空两只乌鸦\r\n"
+        self.__stockForms[0x205] = "反击线形态\r\n"
 
     def get(self, hexKey:int):
-        if not hexKey:
+        if hexKey is None:
             return ""
         if hexKey in self.__stockForms.keys():
             return self.__stockForms[hexKey]
         return ""
+
+    def getTopFlipForm(self):
+        return self.__topFlipForms
+
+    def getButtomFlipForm(self):
+        return self.__buttomFlipForms
 
 if __name__ == '__main__':
     print(StockForms().get(0x204))

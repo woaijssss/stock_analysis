@@ -20,3 +20,13 @@ for i in range(0, len(list)):
     print(ma, "|", min(ma))
 
 print(list[::-1])
+
+l1 = [1, 2, 3]
+l2 = []
+l2 += l1
+print(l2)
+
+l3 = [0x000]
+code = 0x000
+if code in l3:
+    print('==')

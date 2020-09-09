@@ -13,8 +13,8 @@ class CurveDeterminer(object):
 
     def init(self):
         self.__trend_code2Name[-1] = ""
-        self.__trend_code2Name[0] = '下跌趋势'
-        self.__trend_code2Name[1] = '上涨趋势'
+        self.__trend_code2Name[0] = '下跌'
+        self.__trend_code2Name[1] = '上涨'
         self.__trend_code2Name[2] = '趋势不定'
 
     def getChnByTrendCode(self, code:int):

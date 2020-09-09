@@ -72,14 +72,18 @@ class StockAnalyst(object):
                 size = len(ma5_list)
                 curveShape = CurveDeterminer().curveUnevennessJudgment(ma5_list)
 
-            oneDay_res = self.oneDayAnalysisIndicators(df)
-            twoDay_res = self.twoDayAnalysisIndicators(df)
-            threeDay_res = self.threeDayAnalysisIndicators(df)
+            oneDay_res_list = self.oneDayAnalysisIndicators(df)
+            twoDay_res_list = self.twoDayAnalysisIndicators(df)
+            threeDay_res_list = self.threeDayAnalysisIndicators(df)
 
-            form_condition = oneDay_res or twoDay_res or threeDay_res
+            oneDay_res = ""
+            twoDay_res = ""
+            threeDay_res = ""
+            '''
+            form_condition = twoDay_res or threeDay_res
             if curveShape == -1:
                 if form_condition:
-                    result = "无趋势线，可操作"
+                    result = "无趋势线，注意操作"
                 else:
                     result = "无趋势线，不可操作"
             elif curveShape == 0 and form_condition:
@@ -88,6 +92,46 @@ class StockAnalyst(object):
                 result = "卖出"
             else:
                 result = "观望"
+            '''
+            result = "观望"
+            if curveShape == -1:
+                    result = "无趋势线"
+            elif curveShape == 0:
+                # print(oneDay_res_list)
+                # print(twoDay_res_list)
+                # print(threeDay_res_list)
+                for date, code_list in oneDay_res_list:
+                    for code in code_list:
+                        if code in StockForms().getButtomFlipForm():
+                            oneDay_res += date + StockForms().get(code)
+                            result = "买入"
+                for date, code_list in twoDay_res_list:
+                    for code in code_list:
+                        if code in StockForms().getButtomFlipForm():
+                            twoDay_res += date + StockForms().get(code)
+                            result = "买入"
+                for date, code_list in threeDay_res_list:
+                    for code in code_list:
+                        if code in StockForms().getButtomFlipForm():
+                            threeDay_res += date + StockForms().get(code)
+                            result = "买入"
+            elif curveShape == 1:
+                for date, code_list in oneDay_res_list:
+                    for code in code_list:
+                        if code in StockForms().getTopFlipForm():
+                            oneDay_res += date + StockForms().get(code)
+                            result = "卖出"
+                for date, code_list in twoDay_res_list:
+                    for code in code_list:
+                        if code in StockForms().getTopFlipForm():
+                            twoDay_res += date + StockForms().get(code)
+                            result = "卖出"
+                for date, code_list in threeDay_res_list:
+                    for code in code_list:
+                        if code in StockForms().getTopFlipForm():
+                            threeDay_res += date + StockForms().get(code)
+                            result = "卖出"
+
 
             list2Df = [[id, self.__stockMap[id], oneDay_res, twoDay_res, threeDay_res, CurveDeterminer().getChnByTrendCode(curveShape), result]]
             df_tmp = pd.DataFrame(list2Df, columns=columns)
@@ -118,31 +162,43 @@ class StockAnalyst(object):
     def oneDayAnalysisIndicators(self, df: DataFrame):
         self.setAnalysisDays(df)
 
-        resResult = ""
+        # resResult = ""
+        resList = []
         for i in range(0, self.__analysis_days):
             line_lst = list(df.iloc[i])
             date, open, high, close, low = line_lst[0:5]
             day = [open, high, close, low]
-            resResult += StockKLineFormChecker().checkSingleKLineForm(date, day)
-        return resResult
+            res_code_list = StockKLineFormChecker().checkSingleKLineForm(date, day)
+            if not res_code_list:
+                continue
+            resList.append([date, res_code_list])
+        return resList
 
     # 两日组合形态
     def twoDayAnalysisIndicators(self, df: DataFrame):
-        resResult = ""
+        # resResult = ""
+        resList = []
         for i in range(0, self.__analysis_days-1):
             dayOne = list(df.iloc[i + 1])
             dayTwo = list(df.iloc[i])
             date = dayOne[0]
-            resResult += StockKLineFormChecker().checkDoubleKLineForm(date, dayOne, dayTwo)
-        return resResult
+            res_code_list = StockKLineFormChecker().checkDoubleKLineForm(date, dayOne, dayTwo)
+            if not res_code_list:
+                continue
+            resList.append([date, res_code_list])
+        return resList
 
     # 多日组合形态
     def threeDayAnalysisIndicators(self, df: DataFrame):
-        resResult = ""
+        # resResult = ""
+        resList = []
         for i in range(0, self.__analysis_days-2):
             dayOne = list(df.iloc[i + 2])
             dayTwo = list(df.iloc[i + 1])
             dayThree = list(df.iloc[i])
             date = dayTwo[0]
-            resResult += StockKLineFormChecker().checkMultipleKLineForm(date, dayOne, dayTwo, dayThree)
-        return resResult
+            res_code_list = StockKLineFormChecker().checkMultipleKLineForm(date, dayOne, dayTwo, dayThree)
+            if not res_code_list:
+                continue
+            resList.append([date, res_code_list])
+        return resList

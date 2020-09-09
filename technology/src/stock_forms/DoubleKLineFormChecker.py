@@ -114,11 +114,11 @@ class DoubleKLineFormChecker(object):
     def flatTopForm(self, dayOne:list, dayTwo:list):
         open1, high1, close1, low1 = dayOne[1:5]
         open2, high2, close2, low2 = dayTwo[1:5]
-        upper_shadow_len1 = high1 - open1 if open1 > close1 else high1 - close1
-        upper_shadow_len2 = high2 - open2 if open2 > close2 else high2 - close2
+        upper_shadow_len1 = high1 - open1
+        upper_shadow_len2 = high2 - open2
 
-        condition1 = abs(high1-high2)/high1 < 0.01
-        condition2 = upper_shadow_len1 < 0.01 and upper_shadow_len2 < 0.01 and abs(close1-open2)/close1 < 0.01
+        condition1 = abs(high1-high2)/high1 < 0.001
+        condition2 = upper_shadow_len1 < 0.001 and upper_shadow_len2 < 0.001 and abs(close1-open2)/close1 < 0.001
         if open1 < close1 and open2 > close2 and (condition1 or condition2):
             return 0x106
         return -1
@@ -153,13 +153,17 @@ if __name__ == '__main__':
     }
 
     for id in stockMap.keys():
+        import os
+        if not os.path.exists('../../datas/股票数据/' + id + stockMap[id] + '.xlsx'):
+            continue
+
         df = pd.read_excel('../../datas/股票数据/' + id + stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
         print('-----------------------------: ' + id + stockMap[id])
 
-        for i in range(0, 7):
+        for i in range(0, 150):
             dayOne = list(df.iloc[i + 1])
             dayTwo = list(df.iloc[i])
             date = dayOne[0]
-            if DoubleKLineFormChecker().flatBottomForm(dayOne, dayTwo):
+            if DoubleKLineFormChecker().flatTopForm(dayOne, dayTwo) != -1:
                 print("====: " + date)
         print('===========================================\n')

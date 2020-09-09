@@ -36,68 +36,86 @@ class StockKLineFormChecker(object):
         :param day: 当前K线的价格表 [开盘价，最高价，收盘价，最低价]
     '''
     def checkSingleKLineForm(self, date:str, day:list):
-        resStr = ""
+        # resStr = ""
+        resList = []
         res = -1
         res = SingleKLineFormChecker().hammerWire(day)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = SingleKLineFormChecker().meteorForm(day)
         if res != -1:
-            resStr += date + StockForms().get(res)
-        return resStr
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
+        return resList
 
     '''
         双K线形态检测
     '''
     def checkDoubleKLineForm(self, date:str, dayOne: list, dayTwo: list):
-        resStr = ""
+        # resStr = ""
+        resList = []
         res = DoubleKLineFormChecker().engulfingForm(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().darkCloudCover(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().piercingForm(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().InvertedHammerWire(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().pregnantLineForm(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().crossPregnantLineForm(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().flatTopForm(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = DoubleKLineFormChecker().flatBottomForm(dayOne, dayTwo)
         if res != -1:
-            resStr += date + StockForms().get(res)
-        return resStr
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
+        return resList
 
     '''
         多K线形态检测
     '''
     def checkMultipleKLineForm(self, date:str, dayOne:list, dayTwo:list, dayThree:list):
-        resStr = ""
+        # resStr = ""
+        resList = []
         res = MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = MultipleKLineFormChecker().eveningStarForm(dayOne, dayTwo, dayThree)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = MultipleKLineFormChecker().crossVenusForm(dayOne, dayTwo, dayThree)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = MultipleKLineFormChecker().crossEveningStarForm(dayOne, dayTwo, dayThree)
         if res != -1:
-            resStr += date + StockForms().get(res)
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
         res = MultipleKLineFormChecker().gapUpTwoCrows(dayOne, dayTwo, dayThree)
         if res != -1:
-            resStr += date + StockForms().get(res)
-        return resStr
+            # resStr += date + StockForms().get(res)
+            resList.append(res)
+        return resList
 
 ########################################################################################################################
 
