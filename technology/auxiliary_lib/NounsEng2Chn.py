@@ -1,20 +1,21 @@
-
 from pandas import DataFrame
 
 '''
     英文-->中文转换器
 '''
+
+
 class NounsEng2Chn(object):
     __instance = None
-    mStockCode2Chn = {}                     # 股票代码--中文对照关系
-    mDataAllIndexInfo = {}                  # 所有交易指数的基本数据       英文--中文对照关系
-    mDataSpecIndexInfo = {}                 # 特定交易指数的基本数据       英文--中文对照关系
-    mDataSpecIndexTradingDaily = {}         # 特定交易指数的日K数据        英文--中文对照关系
+    mStockCode2Chn = {}  # 股票代码--中文对照关系
+    mDataAllIndexInfo = {}  # 所有交易指数的基本数据       英文--中文对照关系
+    mDataSpecIndexInfo = {}  # 特定交易指数的基本数据       英文--中文对照关系
+    mDataSpecIndexTradingDaily = {}  # 特定交易指数的日K数据        英文--中文对照关系
 
-    mDataAllStockBasicInfo = {}             # 获取A股所有股票的基础信息    英文--中文对照关系
-    mDataTradingDaysMap = {}                # 记录A股当前交易日数据        英文--中文对照关系
-    mDataSpecStockHistory = {}              # 记录特定股票的历史性数据     英文--中文对照关系
-    mDataCompanyBasicInfo = {}              # 记录上市公司的基本情况       英文--中文对照关系
+    mDataAllStockBasicInfo = {}  # 获取A股所有股票的基础信息    英文--中文对照关系
+    mDataTradingDaysMap = {}  # 记录A股当前交易日数据        英文--中文对照关系
+    mDataSpecStockHistory = {}  # 记录特定股票的历史性数据     英文--中文对照关系
+    mDataCompanyBasicInfo = {}  # 记录上市公司的基本情况       英文--中文对照关系
 
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
@@ -24,7 +25,8 @@ class NounsEng2Chn(object):
     '''
         列名英文转中文
     '''
-    def converseEng2Chn(self, df:DataFrame, name_dic:dict):
+
+    def converseEng2Chn(self, df: DataFrame, name_dic: dict):
         for name in list(df.columns):
             if name in name_dic:
                 df.rename(columns={name: name_dic[name]}, inplace=True)  # 修改列名
@@ -33,7 +35,8 @@ class NounsEng2Chn(object):
     '''
         股票代码转中文名字
     '''
-    def converseStockCode2Chn(self, df:DataFrame):
+
+    def converseStockCode2Chn(self, df: DataFrame):
         for i in range(0, len(df)):
             _, _, code, name, _, _, _, _ = df.iloc[i]
             self.mStockCode2Chn[code] = name
@@ -151,4 +154,3 @@ class NounsEng2Chn(object):
         self.mDataCompanyBasicInfo["profit"] = "毛利率(%)"
         self.mDataCompanyBasicInfo["npr"] = "净利润率(%)"
         self.mDataCompanyBasicInfo["holders"] = "股东人数"
-

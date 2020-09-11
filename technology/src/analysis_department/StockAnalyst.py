@@ -16,7 +16,7 @@ class StockAnalyst(object):
     __root_path = "../datas/股票数据/"
     __stockMap = None
     __instance = None
-    __analysis_days = int(ConfigLoader().get("stocks", "analysis_days"))
+    __analysis_days = None
 
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
@@ -56,19 +56,23 @@ class StockAnalyst(object):
     def startAnalysisKLineForm(self):
         columns = ["股票代码", "股票名称", "一天形态", "两天形态", "多天形态", "5日均线趋势", "操作决策"]
         df_result = DataFrame(columns=columns)
+        count = 0
+        stockCount = len(self.__stockMap)
         for id in self.__stockMap.keys():
             # 趋势线形态
             curveShape = -1
+            count += 1
             if not os.path.exists(self.__root_path + id + self.__stockMap[id] + '.xlsx'):
                 continue
-            df = pd.read_excel(self.__root_path + id + self.__stockMap[id] + '.xlsx', sheet_name='历史日K数据',
-                               parse_dates=True)
-            print('-----------------------------: ' + id + self.__stockMap[id])
+            df = pd.read_excel(self.__root_path + id + self.__stockMap[id] + '.xlsx', sheet_name='历史日K数据', parse_dates=True)
 
             self.setAnalysisDays(df)
+            print('第 %d 只/共%d只: [%s], 分析天数起始值: [%d]' % (count, stockCount, id + self.__stockMap[id], self.__analysis_days))
+
             if ConfigLoader().get("stocks", "use_ma5") == '1':
                 # 倒序排列5日均价数据
-                ma5_list = list(df['5日均价'])[0:self.__analysis_days][::-1]
+                end = 7 if len(df) >= 7 else self.__analysis_days
+                ma5_list = list(df['5日均价'])[0:end][::-1]
                 size = len(ma5_list)
                 curveShape = CurveDeterminer().curveUnevennessJudgment(ma5_list)
 
@@ -142,25 +146,28 @@ class StockAnalyst(object):
         - 根据当前数据量大小，和配置设置的分析周期，计算实际需要分析的数据天数
     '''
     def setAnalysisDays(self, df: DataFrame):
-        if self.__analysis_days == -1:
+        self.__analysis_days = int(ConfigLoader().get("stocks", "analysis_days"))
+        if self.__analysis_days == -1:  # 仅供测试
             self.__analysis_days = len(df)
         else:   # analysis_days配置不为 -1
+            analysis_days_temp = 0
             startDate = ConfigLoader().get("stocks", "history_data_start_date")
             if startDate == '-1':   # 只计算7天的量
-                self.__analysis_days = 7 if len(df) >= 7 else len(df)
+                analysis_days_temp = 7 if len(df) >= 7 else len(df)
             else:
                 # 计算数据起始日期距离现在的天数
                 year, mon, day = startDate.split('-')
                 d1 = datetime.datetime(int(year), int(mon), int(day))
                 d2 = datetime.datetime.now()  # 第二个日期
                 days = (d2-d1).days
-                self.__analysis_days = len(df) if days>len(df) else days
+                analysis_days_temp = len(df) if days>len(df) else days
+            self.__analysis_days = min(self.__analysis_days, analysis_days_temp)
 
 
     ########################################################################################################################
     # 一日形态
     def oneDayAnalysisIndicators(self, df: DataFrame):
-        self.setAnalysisDays(df)
+        # self.setAnalysisDays(df)
 
         # resResult = ""
         resList = []

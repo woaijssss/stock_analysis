@@ -1,12 +1,13 @@
-
 import os
 import shutil
 from pathlib import Path
 
-def createPath(path:str):
+
+def createPath(path: str):
     os.mkdir(path)
 
-def deletePath(path:str):
+
+def deletePath(path: str):
     filePath = Path(path)
     if filePath.exists():
         shutil.rmtree(path)
@@ -17,6 +18,7 @@ def deletePath(path:str):
     #         os.remove(file_path)
     #     elif os.path.isdir(file_path):
     #         shutil.rmtree(file_path)
+
 
 if __name__ == '__main__':
     deletePath("../datas/指数数据")

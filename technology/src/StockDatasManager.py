@@ -1,4 +1,3 @@
-
 import tushare as ts
 from auxiliary_lib.NounsEng2Chn import NounsEng2Chn
 from auxiliary_lib.ConfigLoader import ConfigLoader
@@ -6,10 +5,11 @@ import auxiliary_lib.util as util
 from src.analysis_department.StockAnalyst import StockAnalyst
 import time
 
+
 class StockDatasManager:
     __pro = None
-    __basic_path:str = "../datas/股票数据"
-    __stock_code_map = {}      # 保存所有股票代码-股票名称对照关系(不含科创板)
+    __basic_path: str = "../datas/股票数据"
+    __stock_code_map = {}  # 保存所有股票代码-股票名称对照关系(不含科创板)
     __stock_ts_code_list = []
 
     def __init__(self):
@@ -22,6 +22,7 @@ class StockDatasManager:
     '''
         查询当前所有正常上市交易的股票列表
     '''
+
     def getAllStockInfo(self):
         df_StockInfo = ts.get_stock_basics()
         df_StockInfo = df_StockInfo.reset_index()
@@ -31,6 +32,7 @@ class StockDatasManager:
     '''
         新接口：查询当前所有正常上市交易的股票列表
     '''
+
     def getAllStockInfoPro(self):
         df_StockInfo = self.__pro.stock_basic()
         df_StockInfo = df_StockInfo.reset_index()
@@ -50,6 +52,7 @@ class StockDatasManager:
         获取所有股票的历史数据
             从 20200101 开始
     '''
+
     def getAllStockHistoryDatas(self):
         count = 0
         length = len(self.__stock_code_map)
@@ -75,6 +78,7 @@ class StockDatasManager:
             StockAnalyst().setCode2Name(code, name)
             print("第 %d 支股票: [%s]，共 %d 支" % (count, StockAnalyst().getNameByCode(code), length))
             df_SpecStockHistory = df_SpecStockHistory.reset_index()
-            df_SpecStockHistory = NounsEng2Chn().converseEng2Chn(df_SpecStockHistory, NounsEng2Chn.mDataSpecStockHistory)
+            df_SpecStockHistory = NounsEng2Chn().converseEng2Chn(df_SpecStockHistory,
+                                                                 NounsEng2Chn.mDataSpecStockHistory)
             filename = code + NounsEng2Chn().mStockCode2Chn.get(code) + ".xlsx"
             df_SpecStockHistory.to_excel("../datas/股票数据/" + filename, sheet_name='历史日K数据', index=False)

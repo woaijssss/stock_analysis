@@ -1,5 +1,5 @@
-
 import configparser
+
 
 class ConfigLoader(object):
     __instance = None
@@ -17,7 +17,8 @@ class ConfigLoader(object):
     '''
         按照 section-->key 获取配置文件
     '''
-    def get(self, section:str, key:str):
+
+    def get(self, section: str, key: str):
         if self.__config.has_section(section) and key in self.__config[section]:
             return self.__config[section][key]
         else:
@@ -26,6 +27,7 @@ class ConfigLoader(object):
     '''
         初始化读取配置后，根据条件修改默认配置值
     '''
+
     def __changeDefaultConfig(self):
         pass
 
