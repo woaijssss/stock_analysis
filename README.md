@@ -1,6 +1,15 @@
 # stock_analysis
 python 股票分析工具
 
+# 运行环境要求
+```text
+    python version >= 3.5
+    libs:
+        - pandas
+        - numpy
+        - tushare
+```
+
 # 股票分析
 - 股票投资的分析方法主要有3种：基本分析、技术分析、演化分析
 - 基本分析主要应用于投资标的物的选择
