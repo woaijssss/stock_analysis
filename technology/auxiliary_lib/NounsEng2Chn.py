@@ -8,14 +8,17 @@ from pandas import DataFrame
 class NounsEng2Chn(object):
     __instance = None
     mStockCode2Chn = {}  # 股票代码--中文对照关系
-    mDataAllIndexInfo = {}  # 所有交易指数的基本数据       英文--中文对照关系
-    mDataSpecIndexInfo = {}  # 特定交易指数的基本数据       英文--中文对照关系
-    mDataSpecIndexTradingDaily = {}  # 特定交易指数的日K数据        英文--中文对照关系
+    mDataAllIndexInfo = {}  # 所有交易指数的基本数据               英文--中文对照关系
+    mDataSpecIndexInfo = {}  # 特定交易指数的基本数据              英文--中文对照关系
+    mDataSpecIndexTradingDaily = {}  # 特定交易指数的日K数据       英文--中文对照关系
 
-    mDataAllStockBasicInfo = {}  # 获取A股所有股票的基础信息    英文--中文对照关系
-    mDataTradingDaysMap = {}  # 记录A股当前交易日数据        英文--中文对照关系
-    mDataSpecStockHistory = {}  # 记录特定股票的历史性数据     英文--中文对照关系
-    mDataCompanyBasicInfo = {}  # 记录上市公司的基本情况       英文--中文对照关系
+    mDataAllStockBasicInfo = {}  # 获取A股所有股票的基础信息       英文--中文对照关系
+    mDataTradingDaysMap = {}  # 记录A股当前交易日数据              英文--中文对照关系
+    mDataSpecStockHistory = {}  # 记录特定股票的历史性数据         英文--中文对照关系
+
+    mDataCompanyBasicInfo = {}  # 记录上市公司的基本情况           英文--中文对照关系
+    mDataStockCompany = {}      # 记录上市公司的基本情况（pro接口） 英文--中文对照关系
+
 
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
@@ -154,3 +157,21 @@ class NounsEng2Chn(object):
         self.mDataCompanyBasicInfo["profit"] = "毛利率(%)"
         self.mDataCompanyBasicInfo["npr"] = "净利润率(%)"
         self.mDataCompanyBasicInfo["holders"] = "股东人数"
+
+        # pro.stock_company()上市公司基本面信息列
+        self.mDataStockCompany["ts_code"] = "股票代码"
+        self.mDataStockCompany["exchange"] = "交易所代码"
+        self.mDataStockCompany["chairman"] = "法人代表"
+        self.mDataStockCompany["manager"] = "总经理"
+        self.mDataStockCompany["secretary"] = "董秘"
+        self.mDataStockCompany["reg_capital"] = "注册资本"
+        self.mDataStockCompany["setup_date"] = "注册日期"
+        self.mDataStockCompany["province"] = "所在省份"
+        self.mDataStockCompany["city"] = "所在城市"
+        self.mDataStockCompany["introduction"] = "公司介绍"
+        self.mDataStockCompany["website"] = "公司主页"
+        self.mDataStockCompany["email"] = "电子邮件"
+        self.mDataStockCompany["office"] = "办公室"
+        self.mDataStockCompany["employees"] = "员工人数"
+        self.mDataStockCompany["main_business"] = "主要业务及产品"
+        self.mDataStockCompany["business_scope"] = "经营范围"

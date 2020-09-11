@@ -34,7 +34,8 @@ class StockDatasManager:
     '''
 
     def getAllStockInfoPro(self):
-        df_StockInfo = self.__pro.stock_basic()
+        field = "ts_code,symbol,name,area,industry,market,list_date,list_status,exchange,fullname,enname,curr_type"
+        df_StockInfo = self.__pro.stock_basic(list_status='L', fields=field)
         df_StockInfo = df_StockInfo.reset_index()
         df_StockInfo = NounsEng2Chn().converseEng2Chn(df_StockInfo, NounsEng2Chn.mDataAllStockBasicInfo)
         NounsEng2Chn().converseStockCode2Chn(df_StockInfo)
