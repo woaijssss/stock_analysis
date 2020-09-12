@@ -2,7 +2,7 @@ import tushare as ts
 from auxiliary_lib.NounsEng2Chn import NounsEng2Chn
 from auxiliary_lib.ConfigLoader import ConfigLoader
 import auxiliary_lib.util as util
-from src.analysis_department.StockAnalyst import StockAnalyst
+from src.decision_department.StockAnalyst import StockAnalyst
 import time
 
 

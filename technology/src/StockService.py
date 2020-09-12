@@ -2,7 +2,7 @@ import tushare as ts
 import os
 from src.StockIndexDatasManager import StockIndexDatasManager
 from src.StockDatasManager import StockDatasManager
-from src.analysis_department.StockAnalyst import StockAnalyst
+from src.decision_department.StockAnalyst import StockAnalyst
 from auxiliary_lib.ConfigLoader import ConfigLoader
 
 '''

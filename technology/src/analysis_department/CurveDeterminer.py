@@ -6,6 +6,7 @@
 class CurveDeterminer(object):
     __instance = None
     __trend_code2Name = {}
+    __volume_situation = {}
 
     def __new__(cls, *args, **kwargs):
         if not cls.__instance:
@@ -19,10 +20,19 @@ class CurveDeterminer(object):
         self.__trend_code2Name[1] = '上涨'
         self.__trend_code2Name[2] = '趋势不定'
 
+        self.__volume_situation[0] = "量减"
+        self.__volume_situation[1] = "不变"
+        self.__volume_situation[2] = "量增"
+
     def getChnByTrendCode(self, code: int):
         if code is None or code not in self.__trend_code2Name.keys():
-            return '趋势不定'
+            return '异常[均线趋势]'
         return self.__trend_code2Name[code]
+
+    def gtChnByVolumeSituation(self, key:int):
+        if key is None or key not in self.__volume_situation.keys():
+            return '异常[成交量情况]'
+        return self.__volume_situation[key]
 
     '''
         曲线凹凸性判定函数
@@ -43,6 +53,23 @@ class CurveDeterminer(object):
             return 0
         elif (dataList[0] + dataList[length - 1]) / 2 > min(dataList) \
                 and (dataList[0] is max(dataList) or dataList[length - 1] is max(dataList)):
+            return 1
+        else:
+            return 2
+
+    '''
+        成交量增减判定函数
+    '''
+
+    def volumeSituation(self, volume_list:list):
+        length = len(volume_list)
+        if not length or length == 1:  # 散点为空或者长度为1，不符合判定标准
+            print('异常返回')
+            return 2
+        # TODO 增加更精确的判定方法
+        if volume_list[0] > volume_list[1]:
+            return 0
+        elif volume_list[0] == volume_list[1]:
             return 1
         else:
             return 2
