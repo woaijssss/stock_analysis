@@ -41,7 +41,7 @@ class NounsEng2Chn(object):
 
     def converseStockCode2Chn(self, df: DataFrame):
         for i in range(0, len(df)):
-            _, _, code, name, _, _, _, _ = df.iloc[i]
+            code, name = df.iloc[i, [2,3]]
             self.mStockCode2Chn[code] = name
 
     def __init__(self):
