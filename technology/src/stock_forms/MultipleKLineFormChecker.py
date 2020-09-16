@@ -146,17 +146,20 @@ class MultipleKLineFormChecker(object):
 
 if __name__ == '__main__':
     import pandas as pd
+    from src.analysis_department.StockForms import StockForms
 
     stockMap = {
         "000524": "岭南控股",
         "002108": "沧州明珠",
         "002138": "顺络电子",
-        "002407": "多氟多",
         "002625": "光启技术",
-        "600776": "东方通信",
         "603703": "盛洋科技",
-        "603869": "新智认知",
-        "600988": "赤峰黄金"
+        "600988": "赤峰黄金",
+        "000503": "国新健康",
+        "300316": "晶盛机电",
+        "300376": "易事特",
+        "300424": "航新科技",
+        "300494": "盛天网络"
     }
 
     for id in stockMap.keys():
@@ -168,6 +171,7 @@ if __name__ == '__main__':
             dayTwo = list(df.iloc[i + 1])
             dayThree = list(df.iloc[i])
             date = dayTwo[0]
-            if MultipleKLineFormChecker().threeCrowsForms(dayOne, dayTwo, dayThree) != -1:
-                print("====: " + date)
+            res = MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree)
+            if res != -1:
+                print("====>: " + date + ": " + StockForms().get(res), end="")
         print('===========================================\n')

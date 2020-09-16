@@ -18,13 +18,16 @@ class SingleKLineFormChecker(object):
         open, high, close, low = day[0:4]
         entity_len = abs(open - close)  # K线实体
         upper_shadow_len = high - open if open > close else high - close
+        lower_shadow_len = open - low if open < close else close - low
         '''
             - 长下影线
             - 无上影线或极短的下影线
         '''
-        if (abs(low - open) > 2 * entity_len or abs(low - close) > 2 * entity_len) \
-                and upper_shadow_len < 0.01:
-            return 0x000
+        if lower_shadow_len > 2 * entity_len and upper_shadow_len < 0.01:
+            if open > close:
+                return 0x000
+            elif open < close:
+                return 0x001
         return -1
 
     # 流星形态
@@ -40,22 +43,26 @@ class SingleKLineFormChecker(object):
         '''
         if (abs(high - open) > 2 * entity_len or abs(high - close) > 2 * entity_len) \
                 and lower_shadow_len < 0.01:
-            return 0x001
+            return 0x002
         return -1
 
 
 if __name__ == '__main__':
     import pandas as pd
+    from src.analysis_department.StockForms import StockForms
+
     stockMap = {
         "000524": "岭南控股",
         "002108": "沧州明珠",
         "002138": "顺络电子",
-        "002407": "多氟多",
         "002625": "光启技术",
-        "600776": "东方通信",
         "603703": "盛洋科技",
-        "603869": "新智认知",
-        "600988": "赤峰黄金"
+        "600988": "赤峰黄金",
+        "000503": "国新健康",
+        "300316": "晶盛机电",
+        "300376": "易事特",
+        "300424": "航新科技",
+        "300494": "盛天网络"
     }
 
     for id in stockMap.keys():
@@ -66,6 +73,7 @@ if __name__ == '__main__':
             line_lst = list(df.iloc[i])
             date, open, high, close, low = line_lst[0:5]
             day = [open, high, close, low]
-            if SingleKLineFormChecker().meteorForm(day):
-                print("====: " + date)
+            res = SingleKLineFormChecker().hammerWire(day)
+            if res != -1:
+                print("====>: " + date + ": " + StockForms().get(res), end="")
         print('===========================================\n')
