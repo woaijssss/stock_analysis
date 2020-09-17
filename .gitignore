@@ -131,5 +131,5 @@ dmypy.json
 # self
 datas/
 */datas/
-datas.zip
-*/datas.zip
+datas*.zip
+*/datas*.zip
