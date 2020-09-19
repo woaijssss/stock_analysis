@@ -38,11 +38,13 @@ class StockService(object):
             files = os.listdir("../datas/股票数据")
             code_list_cfg = ConfigLoader().get("stocks", "code_list")
             code_list = code_list_cfg.split(",")
+            monitor_code_list = ConfigLoader().get("stocks", "monitor_code_list").split(",")
+            code_list = code_list_cfg
             print("len: ", len(code_list_cfg))
             for file in files:
                 file = file.split('.xlsx')[0]
                 code = file[0:6]
-                if code_list_cfg and code not in code_list:
+                if code_list_cfg and code not in code_list and code not in monitor_code_list:
                     continue
                 name = file[6::]
                 StockAnalyst().setCode2Name(code, name)
@@ -84,7 +86,8 @@ class StockService(object):
     '''
 
     def startDataAnalysis(self):
-        df_default, df_monitor = StockAnalyst().startAnalysisKLineForm()
-        df_default.to_excel("../datas/执行结果.xlsx", sheet_name='执行结果', index=False)
-        df_monitor.to_excel("../datas/已买股票执行结果.xlsx", sheet_name='执行结果', index=False)
+        df_default, df_purchased, df_monitor = StockAnalyst().startAnalysisKLineForm()
+        df_default.to_excel("../datas/1_执行结果.xlsx", sheet_name='执行结果', index=False)
+        df_purchased.to_excel("../datas/2_已买股票执行结果.xlsx", sheet_name='执行结果', index=False)
+        df_monitor.to_excel("../datas/3_监控的股票执行结果.xlsx", sheet_name='执行结果', index=False)
         pass

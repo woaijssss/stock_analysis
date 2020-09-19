@@ -72,8 +72,10 @@ class StockAnalyst(object):
             "最终决策"
         ]
         df_result = DataFrame(columns=columns)
+        df_purchased = DataFrame(columns=columns)
         df_monitor = DataFrame(columns=columns)
         code_list = ConfigLoader().get("stocks", "code_list").split(",")
+        monitor_code_list = ConfigLoader().get("stocks", "monitor_code_list").split(",")
 
         count = 0
         stockCount = len(self.__stockMap)
@@ -129,9 +131,13 @@ class StockAnalyst(object):
 
             ## 单独保存已经购买的股票
             if id in code_list:
+                df_purchased = df_purchased.append(df_tmp)
+
+            ## 保存加入监控的股票
+            if id in monitor_code_list:
                 df_monitor = df_monitor.append(df_tmp)
 
-        return df_result, df_monitor
+        return df_result, df_purchased, df_monitor
 
     '''
         - 根据当前数据量大小，和配置设置的分析周期，计算实际需要分析的数据天数
