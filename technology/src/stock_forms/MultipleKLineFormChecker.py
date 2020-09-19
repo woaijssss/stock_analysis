@@ -75,10 +75,11 @@ class MultipleKLineFormChecker(object):
                      and close2 < close1 and close2 < open3 \
                      and open1 >= close3 and close1 < open3
 
-        condition2 = open1 > close1 and open2 < close2 and open3 < close3 \
+        condition2 = open1 > close1 and open2 < close2 < open1 and open3 < close3 \
                      and open2 < close1 and open2 < open3 and close2 < open1 and close2 < close3 \
-                     and open1 >= close3 and (close3 > close1 and close3 < open1)
-        if (condition1 or condition2) and abs(open2 - close2) / open2 < 0.01:  # TODO 0.01精度需要测试调整
+                     and close1 < close3 <= open1
+
+        if (condition1 or condition2) and abs(open2 - close2)/close2 <= 0.01:  # TODO 0.01精度需要测试调整
             return 0x202
         return -1
 
@@ -96,7 +97,7 @@ class MultipleKLineFormChecker(object):
                      and open2 > close1 and open2 > open3 and close2 > open1 and close2 > close3 \
                      and (open3 > open1 and open3 < close1) \
                      and abs(open3 - close3) > abs(open2 - close2)
-        if condition1 and abs(open2 - close2) / open2 < 0.01:
+        if condition1 and abs(open2 - close2) <= 0.01:
             return 0x203
         return -1
 
@@ -136,10 +137,9 @@ class MultipleKLineFormChecker(object):
                 and (entity_len1 > upper_shadow_len1 and entity_len1 > lower_shadow_len1) \
                 and (entity_len2 > upper_shadow_len2 and entity_len2 > upper_shadow_len2) \
                 and (entity_len3 > upper_shadow_len3 and entity_len3 > upper_shadow_len3) \
-                and (lower_shadow_len1 / close1 < 0.005) and (lower_shadow_len2 / close2 < 0.005) and (
-                lower_shadow_len3 / close3 < 0.005) \
-                and (open1 > open2 and open2 > open3) \
-                and (close1 > close2 and close2 > close3):
+                and (lower_shadow_len1 / close1 <= 0.01) and (lower_shadow_len2 / close2 <= 0.01) and (lower_shadow_len3 / close3 <= 0.01) \
+                and (open1 > open2 > close1 and open2 > open3 > close2) \
+                and (close1 > close2  > close3):
             return 0x205
         return -1
 
@@ -171,7 +171,7 @@ if __name__ == '__main__':
             dayTwo = list(df.iloc[i + 1])
             dayThree = list(df.iloc[i])
             date = dayTwo[0]
-            res = MultipleKLineFormChecker().venusForm(dayOne, dayTwo, dayThree)
+            res = MultipleKLineFormChecker().threeCrowsForms(dayOne, dayTwo, dayThree)
             if res != -1:
                 print("====>: " + date + ": " + StockForms().get(res), end="")
         print('===========================================\n')
