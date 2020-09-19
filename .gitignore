@@ -134,3 +134,5 @@ datas/
 datas*.zip
 */datas*.zip
 exe/
+conf/config.ini
+*/conf/config.ini
