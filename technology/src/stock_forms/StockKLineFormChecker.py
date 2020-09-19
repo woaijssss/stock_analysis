@@ -67,7 +67,7 @@ class StockKLineFormChecker(object):
         if res != -1:
             # resStr += date + StockForms().get(res)
             resList.append(res)
-        res = DoubleKLineFormChecker().InvertedHammerWire(dayOne, dayTwo)
+        res = DoubleKLineFormChecker().invertedHammerWire(dayOne, dayTwo)
         if res != -1:
             # resStr += date + StockForms().get(res)
             resList.append(res)
