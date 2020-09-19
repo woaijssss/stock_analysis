@@ -48,13 +48,21 @@ class CurveDeterminer(object):
         if not length or length == 1:  # 散点为空或者长度为1，不符合判定标准
             return 2
         # TODO 增加更精确的判定方法
-        if (dataList[0] + dataList[length - 1]) / 2 < max(dataList) \
-                and (dataList[0] is min(dataList) or dataList[length - 1] is min(dataList)):
+        '''
+            - 延迟一天判断，防止出现阶段性底部
+        '''
+        if dataList[length - 2] is min(dataList) and dataList[0] is max(dataList) \
+            or dataList[0] < dataList[length-2] < max(dataList) \
+            or max(dataList) > dataList[0] > dataList[length-2]:
+            print("下跌")
             return 0
-        elif (dataList[0] + dataList[length - 1]) / 2 > min(dataList) \
-                and (dataList[0] is max(dataList) or dataList[length - 1] is max(dataList)):
+        elif dataList[0] is min(dataList) and dataList[length-2] is max(dataList) \
+            or dataList[0] > dataList[length-2] > min(dataList) \
+            or min(dataList) < dataList[0] < dataList[length-2]:
+            print("上涨")
             return 1
         else:
+            print("观望")
             return 2
 
     '''
