@@ -84,6 +84,7 @@ class StockService(object):
     '''
 
     def startDataAnalysis(self):
-        df = StockAnalyst().startAnalysisKLineForm()
-        df.to_excel("../datas/执行结果.xlsx", sheet_name='执行结果', index=False)
+        df_default, df_monitor = StockAnalyst().startAnalysisKLineForm()
+        df_default.to_excel("../datas/执行结果.xlsx", sheet_name='执行结果', index=False)
+        df_monitor.to_excel("../datas/已买股票执行结果.xlsx", sheet_name='执行结果', index=False)
         pass
