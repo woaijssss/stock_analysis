@@ -27,6 +27,11 @@ class KLineFormDecision(object):
             return '异常[K线形态]'
         return self.__kline_form_decision[code]
 
+    '''
+        :param curveShape: 5日均线趋势
+        :param analysis_days: 分析天数
+        :param df: K线数据
+    '''
     def decision(self, curveShape:int, analysis_days: int, df: DataFrame):
         oneDay_res_list = self.oneDayAnalysisIndicators(analysis_days, df)
         twoDay_res_list = self.twoDayAnalysisIndicators(analysis_days, df)
@@ -45,24 +50,9 @@ class KLineFormDecision(object):
         """
         result_day1, result_day2, result_day3 = 2, 2, 2
 
-        '''
-        form_condition = twoDay_res or threeDay_res
-        if curveShape == -1:
-            if form_condition:
-                result = "无趋势线，注意操作"
-            else:
-                result = "无趋势线，不可操作"
-        elif curveShape == 0 and form_condition:
-            result = "买入"
-        elif curveShape == 1 and form_condition:
-            result = "卖出"
-        else:
-            result = "观望"
-        '''
-        result = "观望"
-        if curveShape == -1:
-            result = "无趋势线"
-        elif curveShape == 0:
+        if curveShape == -1:        # 无趋势
+            result = "未使用5日均线判断趋势"
+        elif curveShape == 0:       # 下跌趋势
             for date, code_list in oneDay_res_list:
                 for code in code_list:
                     if code in StockForms().getButtomFlipForm():
@@ -78,7 +68,7 @@ class KLineFormDecision(object):
                     if code in StockForms().getButtomFlipForm():
                         threeDay_res += date + StockForms().get(code)
                         result_day3 = 0
-        elif curveShape == 1:
+        elif curveShape == 1:       # 上涨趋势
             for date, code_list in oneDay_res_list:
                 for code in code_list:
                     if code in StockForms().getTopFlipForm():
