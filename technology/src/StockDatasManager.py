@@ -61,7 +61,7 @@ class StockDatasManager:
 
         startDate = ConfigLoader().get("stocks", "history_data_start_date")
         if startDate == '-1':
-            sevenDaySecs = 60 * 60 * 24 * 7
+            sevenDaySecs = 60 * 60 * 24 * 10
             now = time.time()
             date = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(now - sevenDaySecs))
             startDate = date.split('T')[0]
