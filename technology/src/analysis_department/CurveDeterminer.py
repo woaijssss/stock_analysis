@@ -1,5 +1,5 @@
 """
-    价格走势
+    走势检测器
 """
 
 
@@ -15,11 +15,12 @@ class CurveDeterminer(object):
         return cls.__instance
 
     def init(self):
-        self.__trend_code2Name[-1] = ""
+        self.__trend_code2Name[-1] = "停牌或异常"
         self.__trend_code2Name[0] = '下跌'
         self.__trend_code2Name[1] = '上涨'
         self.__trend_code2Name[2] = '趋势不定'
 
+        self.__volume_situation[-1] = "停牌或异常"
         self.__volume_situation[0] = "量减"
         self.__volume_situation[1] = "不变"
         self.__volume_situation[2] = "量增"
@@ -47,7 +48,7 @@ class CurveDeterminer(object):
         length = len(dataList)
         res = 2
         if not length or length == 1:  # 散点为空或者长度为1，不符合判定标准
-            return res
+            return -1
 
         for i in range(0, length-2):
             if dataList[i] > dataList[i+1]:
@@ -87,8 +88,7 @@ class CurveDeterminer(object):
     def volumeSituation(self, volume_list:list):
         length = len(volume_list)
         if not length or length == 1:  # 散点为空或者长度为1，不符合判定标准
-            print('异常返回')
-            return 2
+            return -1
         # TODO 增加更精确的判定方法
         if volume_list[0] > volume_list[1]:
             return 0
