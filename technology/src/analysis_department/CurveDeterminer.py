@@ -45,12 +45,26 @@ class CurveDeterminer(object):
 
     def curveUnevennessJudgment(self, dataList: list):
         length = len(dataList)
+        res = 2
         if not length or length == 1:  # 散点为空或者长度为1，不符合判定标准
-            return 2
+            return res
+
+        for i in range(0, length-2):
+            if dataList[i] > dataList[i+1]:
+                res = 0
+            elif dataList[i] < dataList[i+1]:
+                res = 1
+            else:
+                res = 2
+        return res
+
         # TODO 增加更精确的判定方法
+
         '''
             - 延迟一天判断，防止出现阶段性底部
         '''
+        '''
+        ## 判断趋势，数值判断到倒数第二个
         if dataList[length - 2] is min(dataList) and dataList[0] is max(dataList) \
             or dataList[0] < dataList[length-2] < max(dataList) \
             or max(dataList) > dataList[0] > dataList[length-2]:
@@ -64,6 +78,7 @@ class CurveDeterminer(object):
         else:
             print("观望")
             return 2
+        '''
 
     '''
         成交量增减判定函数

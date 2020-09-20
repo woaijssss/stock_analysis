@@ -19,5 +19,4 @@ class MADecision(object):
         end = 7 if len(df) >= 7 and analysis_days < 7 else analysis_days
         ma5_list = list(df['5日均价'])[0:end][::-1]
         size = len(ma5_list)
-        print(analysis_days, "---", size, "---", len(df))
         return CurveDeterminer().curveUnevennessJudgment(ma5_list)
