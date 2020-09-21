@@ -60,19 +60,31 @@ class StockDatasManager:
         code_list_cfg = ConfigLoader().get("stocks", "code_list")
 
         startDate = ConfigLoader().get("stocks", "history_data_start_date")
-        if startDate == '-1':
-            sevenDaySecs = 60 * 60 * 24 * 10
-            now = time.time()
-            date = time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(now - sevenDaySecs))
-            startDate = date.split('T')[0]
+        endDate = ConfigLoader().get("stocks", "history_data_end_date")
+        now = time.time()
+        today = time.strftime("%Y-%m-%d", time.localtime(now))
+        if endDate == '-1' or endDate >= today:
+            endDate = today
+            if startDate == '-1':
+                sevenDaySecs = 60 * 60 * 24 * 10
+                startDate = time.strftime("%Y-%m-%d", time.localtime(now - sevenDaySecs))
+        else:
+            if startDate == '-1':
+                b_time = time.mktime(time.strptime(endDate, "%Y-%m-%d"))
+                e_time = time.mktime(time.strptime(today, "%Y-%m-%d"))
+                diff_day = (e_time - b_time)/86400
+                sevenDaySecs = 60 * 60 * 24 * (10+diff_day)
+                startDate = time.strftime("%Y-%m-%d", time.localtime(now - sevenDaySecs))
+
         print('起始日期： ' + startDate)
+        print('结束日期： ' + endDate)
 
         for code, name in self.__stock_code_map.items():
             count += 1
             if code_list_cfg and code not in code_list_cfg:
                 continue
 
-            df_SpecStockHistory = ts.get_hist_data(code, start=startDate)
+            df_SpecStockHistory = ts.get_hist_data(code, start=startDate, end=endDate)
             if df_SpecStockHistory is None:
                 print("None: ", code)
                 continue
