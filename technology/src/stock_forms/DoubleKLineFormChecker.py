@@ -41,11 +41,11 @@ class DoubleKLineFormChecker(object):
         open1, high1, close1, low1 = dayOne[1:5]
         open2, high2, close2, low2 = dayTwo[1:5]
         '''
-            - 第二日开盘价高于第一日最高价
+            - 第一天是阳线，第二天是阴线
             - 第二日的阴线深入到阳线 1/2 以下（深入越多越好）
         '''
-        if high1 < open2 \
-                and open1 < close2 < (open1 + close1) / 2:
+        if open1 < close1 and open2 > close2 \
+                and close1 < open2 and open1 < close2 < (open1 + close1) / 2:
             return 0x101
         return -1
 
