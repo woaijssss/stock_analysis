@@ -54,9 +54,8 @@ class MultipleKLineFormChecker(object):
             - 第三天长阴线明显穿入第一天的阴线实体中    
         '''
         condition1 = open1 < close1 and open2 > close2 and open3 > close3 \
-                     and open2 > close1 and open2 > open3 and close2 > open1 and close2 > close3 \
-                     and (open3 > open1 and open3 < close1) \
-                     and abs(open3 - close3) > abs(open2 - close2)
+                     and open2 > close1 and close2 > (open1+close1)/2 and close2 > close3 \
+                     and (open3 > open1 and open3 < close1)
         if condition1:
             return 0x201
         return -1
