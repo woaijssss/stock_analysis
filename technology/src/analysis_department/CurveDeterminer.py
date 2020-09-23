@@ -49,8 +49,7 @@ class CurveDeterminer(object):
         res = 2
         if not length or length == 1:  # 散点为空或者长度为1，不符合判定标准
             return -1
-
-        for i in range(0, length-2):
+        for i in range(0, length-3):    # 判定到倒数第三天
             if dataList[i] > dataList[i+1]:
                 res = 0
             elif dataList[i] < dataList[i+1]:

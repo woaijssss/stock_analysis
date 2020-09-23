@@ -116,9 +116,9 @@ class StockAnalyst(object):
             '''
             result_list = [result_day1, result_day2, result_day3]
             final_result = 2
-            if result_list.count(0) >= 2:
+            if result_list.count(0) >= 1 and result_list.count(1) == 0:   # 买入决策
                 final_result = 0
-            elif result_list.count(1) >= 1:
+            elif result_list.count(1) >= 1 and result_list.count(0) == 0: # 卖出决策
                 final_result = 1
 
             list2Df = [[
