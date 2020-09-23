@@ -21,13 +21,13 @@ class SingleKLineFormChecker(object):
         lower_shadow_len = open - low if open < close else close - low
         '''
             - 长下影线
-            - 无上影线或极短的下影线
+            - 无上影线
         '''
-        if lower_shadow_len > 2 * entity_len and upper_shadow_len < 0.01:
+        if lower_shadow_len > 2 * entity_len and upper_shadow_len == 0: # 严格没有上影线
             if open > close:
-                return 0x000
+                return 0x000    # 顶部绿锤子线
             elif open < close:
-                return 0x001
+                return 0x001    # 底部红锤子线
         return -1
 
     # 流星形态
@@ -42,10 +42,26 @@ class SingleKLineFormChecker(object):
             - 颜色不重要
         '''
         if (abs(high - open) > 2 * entity_len or abs(high - close) > 2 * entity_len) \
-                and lower_shadow_len < 0.01:
+                and lower_shadow_len == 0:  # 严格没有下影线
             return 0x002
         return -1
 
+    # 倒锤子形态
+    def invertedHammerWire(self, day: list):
+        open, high, close, low = day[0:4]
+        entity_len = abs(open - close)  # K线实体
+        lower_shadow_len = open - low if open < close else close - low
+        max_v = max(open, close)
+        '''
+            - 实体较小
+            - 长上影线
+            - 颜色不重要
+            - 第二天是一根阳线，并且阳线 开盘价 >= 第一天实体的最大值
+        '''
+        if abs(high - max_v) >= entity_len \
+                and lower_shadow_len == 0:  # 严格无下影线
+            return 0x104
+        return -1
 
 if __name__ == '__main__':
     import pandas as pd

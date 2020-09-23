@@ -25,15 +25,19 @@ class DoubleKLineFormChecker(object):
     def engulfingForm(self, dayOne: list, dayTwo: list):
         open1, high1, close1, low1 = dayOne[1:5]
         open2, high2, close2, low2 = dayTwo[1:5]
+        min1, max1 = min(open1, close1), max(open1, close1)
+        min2, max2 = min(open2, close2), max(open2, close2)
+
         # 第二根K线完全包裹住第一根K线
         # 看跌条件
-        condition1 = (open2 > close1 > open1 > close2 and open2 > close2)
-        condition2 = (close2 > open1 > close1 > open2 and open2 < close2)
         '''
             - 第二根K线完全包裹住第一根K线
         '''
-        if (condition1 or condition2) and abs(open1 - close1) < abs(open2 - close2):
-            return 0x100
+        if max2 > max1 and min1 > min2:
+            if open1 <= close1 and open2 > close2:
+                return 0x101
+            elif open1 > close1 and open2 <= close2:
+                return 0x100
         return -1
 
     # 乌云盖顶形态
@@ -46,7 +50,7 @@ class DoubleKLineFormChecker(object):
         '''
         if open1 < close1 and open2 > close2 \
                 and close1 < open2 and open1 < close2 < (open1 + close1) / 2:
-            return 0x101
+            return 0x102
         return -1
 
     # 刺透形态（斩回线形态）
@@ -58,7 +62,7 @@ class DoubleKLineFormChecker(object):
         '''
         if open1 > close1 and open2 < close2 and \
                 (low1 >= open2 or close1 >= open2) and close2 < open1 and close2 > (open1 + close1) / 2:
-            return 0x102
+            return 0x103
         return -1
 
     # 倒锤子形态
@@ -74,10 +78,9 @@ class DoubleKLineFormChecker(object):
             - 颜色不重要
             - 第二天是一根阳线，并且阳线 开盘价 >= 第一天实体的最大值
         '''
-        if abs(high1 - max1) > 2 * entity_len \
-                and lower_shadow_len < 0.01 \
-                and close2 > open2 >= max1:
-            return 0x103
+        if abs(high1 - max1) >= entity_len \
+                and lower_shadow_len == 0:  # 严格无下影线
+            return 0x104
         return -1
 
     # 孕线形态
@@ -92,10 +95,10 @@ class DoubleKLineFormChecker(object):
             - 第二根K线颜色不重要
         '''
         if min1 <= min2 and max1 >= max2 and entity_len1 >= 3*entity_len2:
-            if open1 < close1:
-                return 0x104
-            elif open1 > close1:
-                return 0x105
+            if open1 < close1 and open2 >= close1:
+                return 0x105    # 看跌孕线
+            elif open1 > close1 and open2 <= close2:
+                return 0x106    # 看涨孕线
         return -1
 
     # 十字孕线形态
@@ -111,9 +114,9 @@ class DoubleKLineFormChecker(object):
         '''
         if min1 < min2 and max1 > max2 and entity_len1 >= 3*entity_len2 and entity_len2 <= 0.005:
             if open1 < close1:
-                return 0x106
-            elif open1 > close1:
                 return 0x107
+            elif open1 > close1:
+                return 0x108
         return -1
 
     # 平头顶部
@@ -135,7 +138,7 @@ class DoubleKLineFormChecker(object):
         if open1 < close1 and open2 > close2 \
                 and (open1 < close2 < close1 or open1 < open2 < close1) \
                 and (condition1 or condition2):
-            return 0x108
+            return 0x109
         return -1
 
     # 平头底部
@@ -157,7 +160,7 @@ class DoubleKLineFormChecker(object):
         if open1 > close1 and open2 < close2 \
                 and (open1 > close2 > close1 or open1 > open2 > close1) \
                 and (condition1 or condition2):
-            return 0x109
+            return 0x110
         return -1
 
 

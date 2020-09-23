@@ -96,7 +96,7 @@ class MultipleKLineFormChecker(object):
                      and open2 > close1 and open2 > open3 and close2 > open1 and close2 > close3 \
                      and (open3 > open1 and open3 < close1) \
                      and abs(open3 - close3) > abs(open2 - close2)
-        if condition1 and abs(open2 - close2) <= 0.01:
+        if condition1 and abs(open2 - close2) == 0: # 严格十字线
             return 0x203
         return -1
 
